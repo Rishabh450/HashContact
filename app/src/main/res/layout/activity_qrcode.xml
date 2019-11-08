@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorAccent"
+    android:layout_height="match_parent"
+    tools:context=".Support.QRcode">
+
+    <SurfaceView
+        android:id="@+id/cameraPreview"
+        android:layout_width="313dp"
+        android:layout_height="299dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginBottom="271dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </SurfaceView>
+
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="158dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="184dp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="58dp"
+        android:text="Scan someone's Hashcontact QR to connet."
+        app:layout_constraintBottom_toTopOf="@+id/cameraPreview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.257"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.565" />
+
+    <Button
+        android:id="@+id/chooser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="151dp"
+        android:layout_marginTop="97dp"
+        android:padding="10dp"
+        android:layout_marginEnd="151dp"
+        android:background="#cc99ff"
+        android:layout_marginBottom="126dp"
+        android:text="Add QR code from image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreview" />
+
+    <ImageView
+        android:id="@+id/flashbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="144dp"
+        android:layout_marginBottom="89dp"
+        app:layout_constraintBottom_toTopOf="@+id/chooser"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreview"
+        app:srcCompat="@drawable/account" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="@color/colorAccent"
+                android:layout_marginTop="60dp"
+                app:cardCornerRadius="10dp">
+
+                <ImageView
+                    android:id="@+id/profilePhoto1"
+                    android:layout_width="match_parent"
+                    android:layout_height="357dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@android:color/white"
+
+
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Profile Picture"
+                    android:textColor="#3895d3"
+                    android:textSize="20dp"
+                    android:id="@+id/book_error"
+                    android:textStyle="bold">
+
+                </TextView>
+
+
+
+            </androidx.cardview.widget.CardView>
+
+
+
+
+
+            <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        android:layout_gravity="center"
+
+
+
+        >
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_margin="10dp"
+                android:background="#d3d3d3"
+                />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:id="@+id/nametitl"
+                app:errorEnabled="true"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+
+                    android:backgroundTint="#d3d3d3"
+                    android:background="@drawable/backgraedit"
+                    android:id="@+id/nametitle"
+                    android:textColor="#000000"
+
+                    android:hint="NAME">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:id="@+id/book_name_layout"
+                app:errorEnabled="true"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@drawable/backgraedit"
+                    android:backgroundTint="#d3d3d3"
+                    android:id="@+id/insta"
+                    android:textColor="#000000"
+
+                    android:hint="INSTAGRAM ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/author_name_layout"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#d3d3d3"
+                    android:background="@drawable/backgraedit"
+                    android:id="@+id/github"
+                    android:textColor="#000000"
+
+                    android:hint="GITHUB ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/emai"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#d3d3d3"
+                android:background="@drawable/backgraedit"
+                    android:id="@+id/emailtedittext"
+                    android:textColor="#000000"
+
+                    android:hint="EMAIL ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/twitter"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#d3d3d3"
+                    android:background="@drawable/backgraedit"
+                    android:id="@+id/tweet"
+                    android:textColor="#000000"
+
+                    android:hint="TWITTER ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Phone"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:backgroundTint="#d3d3d3"
+                android:background="@drawable/backgraedit"
+                android:id="@+id/Phonenumber"
+                android:textColor="#000000"
+
+                android:hint="PHONE NUMBER">
+
+            </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/facebook"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:backgroundTint="#d3d3d3"
+                android:background="@drawable/backgraedit"
+                android:id="@+id/facebookid"
+                android:textColor="#000000"
+
+                android:hint="FACEBOOKID">
+
+            </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/hack"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#d3d3d3"
+                    android:background="@drawable/backgraedit"
+                    android:id="@+id/hackerearthid"
+                    android:textColor="#000000"
+                    android:hint="HACKEREARTH ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/RANK"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#d3d3d3"
+                    android:background="@drawable/backgraedit"
+                    android:id="@+id/hackerrank"
+                    android:textColor="#000000"
+
+                    android:hint="HACKERRANK ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/CHEF"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#d3d3d3"
+                    android:background="@drawable/backgraedit"
+                    android:id="@+id/codechef"
+                    android:textColor="#000000"
+
+                    android:hint="CODECHEF ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/LINKED"
+                android:layout_marginTop="20dp"
+                app:errorEnabled="true"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="#d3d3d3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#d3d3d3"
+                    android:background="@drawable/backgraedit"
+                    android:id="@+id/linkedin"
+                    android:textColor="#000000"
+
+                    android:hint="LINKEDIN ID">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="10dp"
+                android:background="#d3d3d3"
+                />
+
+
+
+
+        </LinearLayout>
+
+
+
+
+    </androidx.cardview.widget.CardView>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="upload"
+                android:padding="10dp"
+                android:background="#cc99ff"
+                android:id="@+id/upload"></Button>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

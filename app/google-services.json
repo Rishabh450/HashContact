@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "235609262275",
+    "firebase_url": "https://litereria.firebaseio.com",
+    "project_id": "litereria",
+    "storage_bucket": "litereria.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235609262275:android:201e5bb45b8baf2f677a76",
+        "android_client_info": {
+          "package_name": "com.example.litereria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235609262275-1g10estpgk3mgjqd4csfkhadkvat9om0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.litereria",
+            "certificate_hash": "82662a7b6a4b77ec48aceb485a148770f134e69b"
+          }
+        },
+        {
+          "client_id": "235609262275-q9ck8djinagdlisntsjd2usepcgdvkn0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7IseFH6FWMXqUkmPVpTK3wvC-OkgXvHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235609262275-q9ck8djinagdlisntsjd2usepcgdvkn0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
