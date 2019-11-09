@@ -6,6 +6,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Support.Details">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#BC090801"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -78,8 +98,9 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
                             android:backgroundTint="#d3d3d3"
+                            android:background="@drawable/backgraedit"
                             android:id="@+id/nametitleDetails"
                             android:textColor="#000000"
 
@@ -101,8 +122,9 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
                             android:backgroundTint="#d3d3d3"
+                            android:background="@drawable/backgraedit"
                             android:id="@+id/instaDetails"
                             android:textColor="#000000"
 
@@ -121,7 +143,8 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@drawable/backgraedit"
                             android:backgroundTint="#d3d3d3"
                             android:id="@+id/githubDetails"
                             android:textColor="#000000"
@@ -141,8 +164,9 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
                             android:backgroundTint="#d3d3d3"
+                            android:background="@drawable/backgraedit"
                             android:id="@+id/emailtedittextDetails"
                             android:textColor="#000000"
 
@@ -161,7 +185,8 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@drawable/backgraedit"
                             android:backgroundTint="#d3d3d3"
                             android:id="@+id/tweet"
                             android:textColor="#000000"
@@ -181,7 +206,8 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@drawable/backgraedit"
                             android:backgroundTint="#d3d3d3"
                             android:id="@+id/PhonenumberDetails"
                             android:textColor="#000000"
@@ -201,7 +227,8 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@drawable/backgraedit"
                             android:backgroundTint="#d3d3d3"
                             android:id="@+id/facebookidDetails"
                             android:textColor="#000000"
@@ -220,7 +247,9 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@drawable/backgraedit"
+
                             android:backgroundTint="#d3d3d3"
                             android:id="@+id/hackerearthidDetails"
                             android:textColor="#000000"
@@ -238,7 +267,8 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@drawable/backgraedit"
                             android:backgroundTint="#d3d3d3"
                             android:id="@+id/hackerrankDetails"
                             android:textColor="#000000"
@@ -258,7 +288,8 @@
                         android:backgroundTint="#d3d3d3">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@drawable/backgraedit"
                             android:backgroundTint="#d3d3d3"
                             android:id="@+id/codechefDetails"
                             android:textColor="#000000"
@@ -269,7 +300,8 @@
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="70dp"
+                        android:background="@drawable/backgraedit"
                         android:id="@+id/LINKEDss"
                         android:layout_marginTop="20dp"
                         app:errorEnabled="true"
@@ -312,6 +344,14 @@
 
 
             </androidx.cardview.widget.CardView>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="update contact"
+                android:padding="10dp"
+                android:background="#cc99ff"
+                android:id="@+id/updatecontact"></Button>
+
 
 
 

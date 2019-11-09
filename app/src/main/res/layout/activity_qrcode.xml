@@ -6,13 +6,33 @@
     android:background="@color/colorAccent"
     android:layout_height="match_parent"
     tools:context=".Support.QRcode">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#BC090801"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <SurfaceView
         android:id="@+id/cameraPreview"
         android:layout_width="313dp"
         android:layout_height="299dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginBottom="271dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginBottom="150dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,52 +41,52 @@
     </SurfaceView>
 
 
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="158dp"
         android:layout_height="65dp"
         android:layout_marginStart="170dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="300dp"
         android:layout_marginEnd="184dp"
-        android:textColor="@android:color/darker_gray"
         android:layout_marginBottom="58dp"
-        android:text="Scan someone's Hashcontact QR to connet."
+        android:text="Scan someone's Hashcontact QR to connect."
+        android:textColor="#cc99ff"
         app:layout_constraintBottom_toTopOf="@+id/cameraPreview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.257"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.565" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/chooser"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="151dp"
         android:layout_marginTop="97dp"
-        android:padding="10dp"
-        android:layout_marginEnd="151dp"
         android:background="#cc99ff"
-        android:layout_marginBottom="126dp"
+        android:padding="10dp"
         android:text="Add QR code from image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cameraPreview" />
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreview"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/flashbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="252dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="144dp"
-        android:layout_marginBottom="89dp"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="200dp"
+        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toTopOf="@+id/chooser"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cameraPreview"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/account" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,26 +2,39 @@ package com.example.litereria.Support;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.Rect;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -50,42 +63,68 @@ import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
+import com.journeyapps.barcodescanner.camera.CameraSettings;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.security.Policy;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.hardware.camera2.CameraManager.*;
+import static com.example.litereria.R.id.cameraPreview;
+
 public class QRcode extends AppCompatActivity {
-    SurfaceView cameraPreview;boolean isFlash = true;
+    SurfaceView cameraPreview;boolean isFlash = false;
     CameraSource cameraSource;Button chooser;
-    ImageView flashbutton;
-  //  Button upload;
+    ImageView flashbutton;private CameraManager mCameraManager;
+    private String mCameraId; private CaptureRequest.Builder mPreviewRequestBuilder;
+
+
+
 
   public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
 
     private String cameraId = CAMERA_BACK;
     private boolean isFlashSupported=true;
-    private boolean isTorchOn;
+    private boolean isTorchOn=false;
     BarcodeDetector barcodeDetector;FirebaseDatabase database;
     DatabaseReference databaseReference;
+    String uri;
+
     TextView decoded;String query;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein,R.anim.fadeout);
         setContentView(R.layout.activity_qrcode);
-        flashbutton=findViewById(R.id.flashbutton);
-        cameraPreview=findViewById(R.id.cameraPreview);
-        //upload=findViewById(R.id.upload);
+        final boolean isFlashAvailable = getApplicationContext().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
-       /* upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upload();
-            }
-        });*/
+        if (!isFlashAvailable) {
+            showNoFlashError();
+        }
+
+
+        mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        try {
+            mCameraId = mCameraManager.getCameraIdList()[0];
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        flashbutton=findViewById(R.id.flashbutton);
+
+        cameraPreview=findViewById(R.id.cameraPreview);
+
        chooser=findViewById(R.id.chooser);
        chooser.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -96,51 +135,20 @@ public class QRcode extends AppCompatActivity {
         decoded=findViewById(R.id.textView3);
         setupFlashButton();
         flashbutton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                switchFlash();
+                isTorchOn=!isTorchOn;
+                switchFlashLight(isTorchOn);
+                setupFlashButton();
+
             }
         });
         barcodeDetector=new BarcodeDetector.Builder(QRcode.this)
                 .setBarcodeFormats(Barcode.QR_CODE).build();
-        cameraSource=new CameraSource.Builder(QRcode.this,barcodeDetector)
-                .setRequestedPreviewSize(640,480).build();
-        cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                if(ContextCompat.checkSelfPermission(QRcode.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED)
-                {
-                    // Log.e(TAG, "setxml: peremission prob");
-                    ActivityCompat.requestPermissions(QRcode.this,new String[]{Manifest.permission.CAMERA},0);
-                    if(ContextCompat.checkSelfPermission(QRcode.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED)
-                        recreate();
-                    else
-                        startActivity(new Intent(QRcode.this,MainActivity.class));
 
 
-                }else {
-                    try {
-                        Log.d("ak47","test");
-                        Vibrator vibrator=(Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(300);
-                        cameraSource.start(holder);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                cameraSource.stop();
-            }
-        });
+        displayCamer();
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -177,18 +185,49 @@ public class QRcode extends AppCompatActivity {
             }
         });
     }
-    public void switchFlash() {
-        if (cameraId.equals(CAMERA_BACK)) {
-            if (isFlashSupported) {
-                if (isTorchOn) {
 
-                    isTorchOn = false;
-                } else {
+    public void displayCamer()
+    {
+        CameraSource.Builder mah=new CameraSource.Builder(QRcode.this,barcodeDetector)
+                .setRequestedPreviewSize(640,480);
+        cameraSource=mah.setAutoFocusEnabled(true).build();
+        cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                if(ContextCompat.checkSelfPermission(QRcode.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED)
+                {
+                    // Log.e(TAG, "setxml: peremission prob");
+                    ActivityCompat.requestPermissions(QRcode.this,new String[]{Manifest.permission.CAMERA},0);
+                    if(ContextCompat.checkSelfPermission(QRcode.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED)
+                        recreate();
+                    else
+                        startActivity(new Intent(QRcode.this,MainActivity.class));
 
-                    isTorchOn = true;
+
+                }else {
+                    try {
+                        Log.d("ak47","test");
+                        Vibrator vibrator=(Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(200);
+                        // cameraSource.getCameraFacing();
+                        cameraSource.start(holder);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             }
-        }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                cameraSource.stop();
+            }
+        });
     }
 
     public void setupFlashButton() {
@@ -196,113 +235,134 @@ public class QRcode extends AppCompatActivity {
             flashbutton.setVisibility(View.VISIBLE);
 
             if (isTorchOn) {
-                flashbutton.setImageResource(R.drawable.flashoff);
-            } else {
                 flashbutton.setImageResource(R.drawable.flashon);
+            } else {
+                flashbutton.setImageResource(R.drawable.flashoff);
             }
 
         } else {
             flashbutton.setVisibility(View.GONE);
         }
     }
-    public void getQRfromImage(Bitmap im)
-    {
-        Log.d("imagewa","GHUSA");
-        Bitmap generatedQRCode=im;
-        int width = generatedQRCode.getWidth();
-        int height = generatedQRCode.getHeight();
-        int[] pixels = new int[width * height];
-        generatedQRCode.getPixels(pixels, 250, width, 250, 250, width, height);
-        Log.d("image","QR generated");
+    public void showNoFlashError() {
+        AlertDialog alert = new AlertDialog.Builder(this)
+                .create();
+        alert.setTitle("Oops!");
+        alert.setMessage("Flash not available in this device...");
+        alert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        alert.show();
+    }
 
-        RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
-
-        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
-
-        Reader reader = new MultiFormatReader();
-        Result result = null;
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void switchFlashLight(boolean status) {
         try {
-            result = reader.decode(binaryBitmap);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        } catch (ChecksumException e) {
-            e.printStackTrace();
-        } catch (FormatException e) {
+
+            cameraSource.stop();
+            mCameraManager.setTorchMode(mCameraId, status);
+
+        } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-        String text = result.getText();
-        Toast.makeText(this,text,Toast.LENGTH_LONG).show();
     }
+
+    protected Result doInBackground(Bitmap bitmap)
+    {
+
+        if (bitmap == null)
+        {
+
+            Toast.makeText(this,"Invalid image file",Toast.LENGTH_LONG);
+            Log.e("ak100", "uri is not a bitmap," + uri.toString());
+            return null;
+        }
+        int width = bitmap.getWidth(), height = bitmap.getHeight();
+        int[] pixels = new int[width * height];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        bitmap.recycle();
+        bitmap = null;
+        RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
+        BinaryBitmap bBitmap = new BinaryBitmap(new HybridBinarizer(source));
+        MultiFormatReader reader = new MultiFormatReader();
+        try
+        {
+
+
+            Log.d("ak200","ghua");
+            Result result = reader.decode(bBitmap);
+            Log.d("ak200", String.valueOf(result));
+            query=String.valueOf(result);
+            upload();
+            return result;
+        }
+        catch (NotFoundException e)
+        {   Toast.makeText(this,"Invalid HashContact QR",Toast.LENGTH_LONG).show();
+            Log.e("ak100", "decode exception", e);
+            return null;
+        }
+    }
+
     private void selectImage() {
 
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(chooserIntent, 1);
 
     }
-    /*public void changeFlashStatus() {
-        Camera.Parameters params;
-        Camera camera;
-        CameraSource cameraSource;
-        SurfaceView cameraView;
-        boolean isFlash = false;
-        Field[] declaredFields = CameraSource.class.getDeclaredFields();
-
-        for (Field field : declaredFields) {
-            if (field.getType() == Camera.class) {
-                field.setAccessible(true);
-                try {
-                    camera = (Camera) field.get(cameraSource);
-                    if (camera != null) {
-                        params = camera.getParameters();
-                        if (!isFlash) {
-                            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                            flashImage.setColorFilter(getResources().getColor(R.color.yellow));
-                            isFlash = true;
-                        } else {
-                            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                            flashImage.setColorFilter(getResources().getColor(R.color.greyLight));
-                            isFlash = false;
-                        }
-                        camera.setParameters(params);
-                    }
-
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-
-                break;
-            }
-        }
-    }*/
-
 
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1 && resultCode== RESULT_OK && data!=null &&data.getData()!=null){
+        if (resultCode == RESULT_OK) {
 
-            {
-                final Bundle extras = data.getExtras();
-                if (extras != null) {
-                    //Get image
-                    Bitmap newProfilePic = extras.getParcelable("data");
-                    Log.d("imagewaa","GHUSA");
-                    getQRfromImage(newProfilePic);
-                }
-                /*if(data!=null){
-                    Bitmap b=(Bitmap) data.getExtras().get("imagebitmap");;
-                  // getQRfromImage(b);
+            Uri pickedImage = data.getData();
+            // Let's read picked image path using content resolver
+            String[] filePath = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
+            cursor.moveToFirst();
+            String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                }*/
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
 
 
-            }
+            cursor.close();
+            doInBackground(bitmap);
+        }
 
         }
 
-
+    public static String getPath( Context context, Uri uri ) {
+        String result = null;
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = context.getContentResolver( ).query( uri, proj, null, null, null );
+        if(cursor != null){
+            if ( cursor.moveToFirst( ) ) {
+                int column_index = cursor.getColumnIndexOrThrow( proj[0] );
+                result = cursor.getString( column_index );
+            }
+            cursor.close( );
+        }
+        if(result == null) {
+            result = "Not found";
+        }
+        return result;
     }
+
+
+
+
+
     public void upload()
     {
 
@@ -333,7 +393,7 @@ public class QRcode extends AppCompatActivity {
 
             databaseReference.child(Profile.getCurrentProfile().getId()).child("Contact").child(key).setValue(bookdata);
 
-            Toast.makeText(this,"Contact uploaded",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Contact uploaded",Toast.LENGTH_SHORT).show();
             Handler handler = new Handler();
             final Intent i = new Intent(this, MainActivity.class);
 
@@ -344,11 +404,10 @@ public class QRcode extends AppCompatActivity {
 
                     finish();
                 }
-            }, 2000);
-           // startActivity(new Intent(this, MainActivity.class));
+            }, 1000);
+
         }
         catch (Exception e) {
-            // Google Sign In failed, update UI appropriately
             Log.w("thiswa", "Google sign in failed", e);
             Toast.makeText(this,"Invalid QR",Toast.LENGTH_LONG).show();
             Handler handler = new Handler();
@@ -362,8 +421,7 @@ public class QRcode extends AppCompatActivity {
                     finish();
                 }
             }, 2000);
-            //startActivity(new Intent(this, MainActivity.class));
-            // ...
+
         }
 
 

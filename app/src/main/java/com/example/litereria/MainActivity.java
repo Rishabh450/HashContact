@@ -422,7 +422,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                     break;
-            case R.id.signout:signOut();
+            case R.id.signout:
+                signOut();
 
         }
         //close navigation drawer
