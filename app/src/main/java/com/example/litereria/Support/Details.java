@@ -1,13 +1,20 @@
 package com.example.litereria.Support;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,33 +24,48 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.litereria.MainActivity;
 import com.example.litereria.R;
+import com.example.litereria.RecyclerViewChatList;
+import com.example.litereria.RecyclerViewDetails;
+import com.example.litereria.TouchImageView;
 import com.facebook.Profile;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Details extends AppCompatActivity {
-    ImageView qr;
-    EditText insta,github,emailid,twitter,phonenumber,facebookid,hackerearthid,hackerrankid,codechefid,linkedinid,title,nameer;
     ImageView imageView;
-    Uri photoURL=null; Uri profilePictureUri;
-    String emailids; String uri=null;String name;
-    Button generate,clear;Button update;String photo;
-    private StorageReference mStorageRef;String id;
+Button contact;
+    LinearLayout linearLayout;
+    String uri=null;Drawable img;
+
+
+    RecyclerViewDetails recyclerViewDetails;
+    ArrayList<Map<String, String>> contacts = new ArrayList<Map<String, String>>();
     HashMap<String,String > data;
-    private FirebaseDatabase database ;String key;
-    private DatabaseReference myRef,databaseReference;
+   String key;String provider;
+   String currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,77 +73,56 @@ public class Details extends AppCompatActivity {
         overridePendingTransition(R.anim.fadein,R.anim.fadeout);
         setContentView(R.layout.activity_details);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        imageView=findViewById(R.id.profilePhotoDetails);
+        linearLayout=findViewById(R.id.zoom);
+        contact=findViewById(R.id.contact);
+        contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(Details.this,ChatBox.class);
+                intent.putExtra("id",key);
+                startActivity(intent);
+
+            }
+        });
+        for (UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if (user.getProviderId().equals("facebook.com")) {
+                provider="facebook";
+                currentUser=Profile.getCurrentProfile().getId();
+            }
+            else {
+                provider = "google";
+                UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
+
+                currentUser=userInfo.getUid();
+            }
+        }
+
+
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent=getIntent();
-        insta=findViewById(R.id.instaDetails);
-        update=findViewById(R.id.updatecontact);
-        facebookid=findViewById(R.id.facebookidDetails);
-        codechefid=findViewById(R.id.codechefDetails);
-        hackerearthid=findViewById(R.id.hackerearthidDetails);
-        emailid=findViewById(R.id.emailtedittextDetails);
-        linkedinid=findViewById(R.id.linkedinDetails);
-        hackerrankid=findViewById(R.id.hackerrankDetails);
-        nameer=findViewById(R.id.nametitle);
-        id= Profile.getCurrentProfile().getId();
-        phonenumber=findViewById(R.id.PhonenumberDetails);
-        github=findViewById(R.id.githubDetails);
-        twitter=findViewById(R.id.twitter);
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog alertDialog = new AlertDialog.Builder(Details.this)
-//set icon
-                        .setIcon(R.drawable.connectlogo)
-//set title
-                        .setTitle("Update Contact")
-//set message
-                        .setMessage("Existing information will be replaced.Are you sure you want to continue?")
-//set positive button
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //set what would happen when positive button is clicked
-                                update();
-                            }
-                        })
-//set negative button
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //set what should happen when negative button is clicked
 
-                            }
-                        })
-                        .show();
 
-            }
-        });
+        RecyclerView recyclerView = findViewById(R.id.detaillist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Log.d("choka", "onDataChange: " + contacts);
+        getdata();
+        recyclerViewDetails = new RecyclerViewDetails(contacts,this);
+        Log.d("dad", String.valueOf(contacts));
+
+        recyclerView.setAdapter(recyclerViewDetails);
+
         if(intent.hasExtra("Data"))
         {
             data=(HashMap<String,String >)intent.getSerializableExtra("Data");
-           // Toast.makeText(Details.this,data.get("Instagram"),Toast.LENGTH_LONG).show();
-            String owner=data.get("Instagram");
-            insta.setText(owner);
-            codechefid.setText(data.get("Codechef"));
-            key=data.get("Key");
-            emailid.setText(data.get("Email"));
-            facebookid.setText(data.get("Facebook"));
-            imageView=findViewById(R.id.profilePhotoDetails);
-            nameer=findViewById(R.id.nametitleDetails);
-            hackerearthid.setText(data.get("HackerEarth"));
-            hackerrankid.setText(data.get("HackerRank"));
-            linkedinid.setText(data.get("Linkedin"));
-            twitter=findViewById(R.id.tweet);
-            photo=data.get("photo");
-            github=findViewById(R.id.githubDetails);
-            nameer.setText(data.get("Name"));
-            phonenumber.setText(data.get("PhoneNumber"));
-            twitter.setText(data.get("Twitter"));
-            github.setText(data.get("github"));
+            //Intent intent=getIntent();
+             key= data.get("key");
+            Log.d("makapyaar", key);
 
-            uri=data.get("photo");
+            uri=data.get("Photo");
             CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(this );
             circularProgressDrawable.setStrokeWidth(5f);
             circularProgressDrawable.setCenterRadius(30f) ;
@@ -130,6 +131,19 @@ public class Details extends AppCompatActivity {
             Glide.with(this)
                     .load(uri)
                     .placeholder(circularProgressDrawable).into(imageView);
+            Glide.with(this)
+                    .load(uri)
+                    .into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            img=resource;
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                        }
+                    });
 
 
 
@@ -138,36 +152,24 @@ public class Details extends AppCompatActivity {
 
 
         }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(Details.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_custom_layout, null);
+                PhotoView photoView = mView.findViewById(R.id.imageview1);
+                photoView.setImageDrawable(img);
+                mBuilder.setView(mView);
+                AlertDialog mDialog = mBuilder.create();
+                mDialog.show();
+            }
+        });
+        TouchImageView iv = new TouchImageView(getApplicationContext());
+        iv.setImageBitmap(drawableToBitmap(imageView.getDrawable()) );
+
+        linearLayout.addView(iv);
 
 
-    }
-    public void update()
-    {
-        final Map<String,Object> bookdata=new HashMap<>();
-        bookdata.put("Email",emailid.getText().toString());
-
-        bookdata.put("Instagram",insta.getText().toString());
-        bookdata.put("github",github.getText().toString());
-        bookdata.put("Twitter",twitter.getText().toString());
-        bookdata.put("PhoneNumber",phonenumber.getText().toString());
-        bookdata.put("Facebook",facebookid.getText().toString());
-        bookdata.put("photo",photo);
-        bookdata.put("HackerEarth",hackerearthid.getText().toString());
-        bookdata.put("HackerRank",hackerrankid.getText().toString());
-        bookdata.put("Codechef",codechefid.getText().toString());
-        bookdata.put("Linkedin",linkedinid.getText().toString());
-        //  String key=String.valueOf(System.currentTimeMillis());
-        bookdata.put("key",key);
-        bookdata.put("Name",nameer.getText().toString());
-        database = FirebaseDatabase.getInstance();
-
-        databaseReference=database.getReference();
-        String  emailids= FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        String id= Profile.getCurrentProfile().getId();
-
-        databaseReference.child(Profile.getCurrentProfile().getId()).child("Contact").child(key).setValue(bookdata);
-
-        Toast.makeText(this,"Contact uploaded",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -183,7 +185,7 @@ public class Details extends AppCompatActivity {
 
             case R.id.remove:
                 AlertDialog alertDialog = new AlertDialog.Builder(this)
-//set icon
+
                         .setIcon(R.drawable.remove)
 //set title
                         .setTitle("Remove Contact")
@@ -193,8 +195,9 @@ public class Details extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+
                                 //set what would happen when positive button is clicked
-                                FirebaseDatabase.getInstance().getReference().child(id).child("Contact").child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                               FirebaseDatabase.getInstance().getReference().child(currentUser).child("Contact").child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
 
@@ -205,11 +208,10 @@ public class Details extends AppCompatActivity {
 
                             }
                         })
-//set negative button
+
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //set what should happen when negative button is clicked
 
                             }
                         })
@@ -222,4 +224,52 @@ public class Details extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+    private void getdata() {
+        Intent intent=getIntent();
+
+        if(intent.hasExtra("Data")) {
+            data = (HashMap<String, String>) intent.getSerializableExtra("Data");
+        }
+
+                contacts.clear();
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            if(entry.getValue().equals("")||entry.getKey().equals("key")||entry.getKey().equals("Photo")||entry.getKey().equals("PhotoUrl")) {
+
+            }
+            else {
+                Map<String, String> mp1 = new HashMap<>();
+                mp1.put("detailname", entry.getKey());
+                mp1.put("detail", entry.getValue());
+                if(!mp1.get("detailname").equals("Notification")){
+                contacts.add(mp1);
+                Log.d("theos", String.valueOf(mp1));}
+            }
+
+
+        }
+        Log.d("theo", String.valueOf(contacts));
+
+    }
+
 }

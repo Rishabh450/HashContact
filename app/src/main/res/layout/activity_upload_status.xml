@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Support.UploadStatus">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+
+
+            android:background="@drawable/backgraedit"
+            android:textColor="@android:color/holo_purple"
+            android:hint="Write a caption..."
+
+
+            android:id="@+id/status_content_text"
+
+            >
+
+        </EditText>
+
+
+
+
+
+    </LinearLayout>
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:background="@android:color/holo_blue_dark"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:id="@+id/add_image_to_status"
+        android:fontFamily="@font/montserrat"
+        android:textAllCaps="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:textColor="@android:color/white"
+        android:text="Add image from gallery"
+        android:textStyle="bold"
+        android:drawablePadding="10dp"
+        android:layout_height="60dp">
+
+    </Button>
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:background="@android:color/holo_blue_dark"
+        android:elevation="10dp"
+        android:textColor="@android:color/white"
+        android:text="Upload"
+        android:id="@+id/upload_st"
+        android:clickable="true"
+        android:fontFamily="@font/montserrat"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/upload_data"
+        android:layout_height="60dp">
+
+    </Button>
+    <androidx.cardview.widget.CardView
+        android:layout_width="300dp"
+        android:layout_marginTop="20dp"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:visibility="gone"
+        android:id="@+id/feedcar"
+
+        android:layout_gravity="center"
+        android:layout_height="300dp"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:id="@+id/statuspic"
+            android:layout_height="match_parent">
+
+        </ImageView>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</LinearLayout>

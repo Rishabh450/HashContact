@@ -1,11 +1,15 @@
 package com.example.litereria.ui.gallery;
 
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -17,10 +21,14 @@ import androidx.navigation.NavHost;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.litereria.MainActivity;
 import com.example.litereria.R;
 import com.example.litereria.RecyclerViewChatList;
+import com.example.litereria.Support.QRcode;
 import com.facebook.Profile;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,9 +39,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GalleryFragment extends Fragment implements NavHost {
+public class GalleryFragment extends Fragment {
     ArrayList<Map<String, String>> contacts = new ArrayList<Map<String, String>>();
-
+    ImageView addcontact;String provider;
     private FirebaseDatabase database;
     private DatabaseReference myRef;Map<String, String> mp = new HashMap<String, String>();
 
@@ -45,10 +53,19 @@ public class GalleryFragment extends Fragment implements NavHost {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View vh = inflater.inflate(R.layout.fragment_gallery, container, false);
+        addcontact=vh.findViewById(R.id.addcontact);
+      // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
 
         getdata();
         intit(vh);
-
+        addcontact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), QRcode.class);
+                startActivity(intent);
+            }
+        });
 
         return vh;
 
@@ -56,11 +73,29 @@ public class GalleryFragment extends Fragment implements NavHost {
 
     private void getdata() {
         Log.d("ak47", "getdata: ");
-        String c = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
-        String currentUser = Profile.getCurrentProfile().getId();;
+      //  String c = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String currentUser = null;
+
+        for (UserInfo useer:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if (useer.getProviderId().equals("facebook.com")) {
+                provider="facebook";
+                currentUser=Profile.getCurrentProfile().getId();
+            }
+            else {
+                provider = "google";
+                UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
+
+                currentUser=userInfo.getUid();
+            }
+        }
+
+
         database = FirebaseDatabase.getInstance();
+       // database.setPersistenceEnabled(true);
         String email = String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         myRef = database.getReference().child(currentUser).child("Contact");
+        myRef.keepSynced(true);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -70,17 +105,28 @@ public class GalleryFragment extends Fragment implements NavHost {
 
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
                     String user = dataSnapshot1.getKey();
+                    Log.w("babaji",user);
+                    Map<String ,String> mp1=new HashMap<>();
 
-                    mp = (Map<String, String>) dataSnapshot1.getValue();
-                    mp.put("key",dataSnapshot1.getKey());
 
-                    Log.d("ak46", "onDataChange: " + mp + " added");
+                    // mp = (Map<String, String>) dataSnapshot1.getValue();
+                    mp1.put("key",user);
 
-                    contacts.add(mp);
+                    Log.d("ak46", "onDataChange: " + mp1 + " added");
+
+                    contacts.add(mp1);
                     Log.d("lognaa", "onDataChange: " + contacts);
 
 
                 }
+                if(contacts.isEmpty()) {
+                    addcontact.setVisibility(View.VISIBLE);
+
+                   // Toast.makeText(getContext(), "No contacts", Toast.LENGTH_SHORT).show();
+                }
+                else
+                    addcontact.setVisibility(View.GONE);
+
                 recyclerViewChatList.notifyDataSetChanged();
 
 
@@ -93,21 +139,24 @@ public class GalleryFragment extends Fragment implements NavHost {
 
             }
         });
+        Log.d("madar", "onDataChange: " + contacts);
+
 
 
     }
 
     private void intit(View vh) {
+
         RecyclerView recyclerView = vh.findViewById(R.id.chatList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         Log.d("choka", "onDataChange: " + contacts);
+
+
+
         recyclerViewChatList = new RecyclerViewChatList(contacts, getContext());
         recyclerView.setAdapter(recyclerViewChatList);
     }
 
-    @NonNull
-    @Override
-    public NavController getNavController() {
-        return null;
-    }
+
+
 }

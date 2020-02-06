@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/ChatBubbleContainer"
+    android:layout_height="wrap_content">
+
+    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+        android:id="@+id/recivedMessegeBubble"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+
+        android:elevation="3dp"
+        android:textColor="@android:color/black"
+
+        android:layout_height="wrap_content"
+        android:foregroundGravity="right"
+        android:lineSpacingExtra="2dp"
+android:background="@drawable/icoming"
+
+
+        android:paddingLeft="15dp"
+        android:paddingTop="4dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:text="RECived Messege"
+        android:textSize="16.5dp" />
+
+    <ImageView
+
+        android:id="@+id/recivedMessegeImage"
+        android:layout_width="300dp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:elevation="3dp"
+
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="left"
+        android:layout_height="300dp">
+
+    </ImageView>
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/recivedMessegegif"
+        android:layout_width="200dp"
+        android:visibility="gone"
+
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="left"
+        android:layout_height="200dp">
+
+    </pl.droidsonroids.gif.GifImageView>
+
+
+
+    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+        android:id="@+id/sendMessegeBubble"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="left"
+
+
+        android:background="@drawable/outgoing"
+        android:lineSpacingExtra="2dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="4dp"
+        android:elevation="6dp"
+        android:paddingRight="15dp"
+
+        android:paddingBottom="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="16.5dp"
+
+        android:text="Send Messege"
+        />
+    <ImageView
+        android:id="@+id/sendMessegeImage"
+        android:layout_width="300dp"
+        android:visibility="gone"
+        android:elevation="3dp"
+
+        android:layout_marginRight="10dp"
+
+        android:layout_gravity="right"
+        android:layout_height="300dp">
+
+    </ImageView>
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/sendMessegegif"
+        android:layout_width="200dp"
+        android:layout_marginTop="10dp"
+        android:elevation="3dp"
+
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+android:visibility="gone"
+        android:layout_gravity="right"
+        android:layout_height="200dp">
+
+    </pl.droidsonroids.gif.GifImageView>
+
+
+
+</LinearLayout>

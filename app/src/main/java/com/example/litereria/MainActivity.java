@@ -1,19 +1,30 @@
 package com.example.litereria;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.litereria.Models.Post;
+import com.example.litereria.Support.ChatBox;
+import com.example.litereria.Support.Chats;
+import com.example.litereria.Support.Feed;
 import com.example.litereria.Support.Login;
 import com.example.litereria.Support.QRcode;
+import com.example.litereria.Support.Status;
 import com.example.litereria.ui.gallery.GalleryFragment;
 import com.example.litereria.ui.home.HomeFragment;
 import com.example.litereria.ui.slideshow.SlideshowFragment;
@@ -22,9 +33,10 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -36,6 +48,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -49,6 +63,14 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.onesignal.OneSignal;
+import com.onesignal.shortcutbadger.ShortcutBadger;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -79,102 +101,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    FirebaseAuth.AuthStateListener authStateListener;
-    FirebaseAuth mAuth;String email,name;
+    FirebaseAuth.AuthStateListener authStateListener;String userno;
+    FirebaseAuth mAuth;String email,name;private ProgressDialog mProgress;
     Uri photoUrl;TextView name1,email1;NavigationView navigationView;
-    private Context context=MainActivity.this;
-    ImageView profilePhoto;DrawerLayout drawer;
-    GoogleSignInClient mGoogleSignInClient;
-    /*class MyAsyncTask extends AsyncTask<String, String, Void> {
+    private Context context=MainActivity.this; String currentUser1;
+    ImageView profilePhoto;DrawerLayout drawer;Uri profilePictureUri;
+    BottomNavigationView bott;TextView userid;
+    GoogleSignInClient mGoogleSignInClient;String provider;
 
-        private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-        InputStream inputStream = null;String name;
-        String result = "";String url_select;
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            url_select = "https://graph.facebook.com/1342147085963751/picture?type=square&type=large&redirect=false";
-
-            ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
-
-            try {
-                // Set up HTTP post
-
-                // HttpClient is more then less deprecated. Need to change to URLConnection
-                HttpClient httpClient = new DefaultHttpClient();
-
-                HttpPost httpPost = new HttpPost(url_select);
-                httpPost.setEntity(new UrlEncodedFormEntity(param));
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                HttpEntity httpEntity = httpResponse.getEntity();
-
-                // Read content & Log
-                inputStream = httpEntity.getContent();
-            } catch (UnsupportedEncodingException e1) {
-                Log.e("UnsupportedEn", e1.toString());
-                e1.printStackTrace();
-            } catch (ClientProtocolException e2) {
-                Log.e("ClientProtocolException", e2.toString());
-                e2.printStackTrace();
-            } catch (IllegalStateException e3) {
-                Log.e("IllegalStateException", e3.toString());
-                e3.printStackTrace();
-            } catch (IOException e4) {
-                Log.e("IOException", e4.toString());
-                e4.printStackTrace();
-            }
-            // Convert response to string using String Builder
-            try {
-                BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"), 8);
-                StringBuilder sBuilder = new StringBuilder();
-
-                String line = null;
-                while ((line = bReader.readLine()) != null) {
-                    sBuilder.append(line + "\n");
-                }
-
-                inputStream.close();
-                result = sBuilder.toString();
-
-            } catch (Exception e) {
-                Log.e("StringBuilding", "Error converting result " + e.toString());
-            }
-            return null;
-        }
-        protected void onPreExecute() {
-            AlertDialog.Builder progressDialog = null;
-            progressDialog.setMessage("Downloading your data...");
-            progressDialog.show();
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface arg0) {
-                    MyAsyncTask.this.cancel(true);
-                }
-            });
-        }
-        protected void onPostExecute(Void v) {
-            //parse JSON data
-            try {
-                JSONArray jArray = new JSONArray(result);
-                int i;
-                for(i=0; i < jArray.length(); i++) {
-
-                    JSONObject jObject = jArray.getJSONObject(i);
-
-                    name = jObject.getString("url");
-                    Toast.makeText(MainActivity.this,name,Toast.LENGTH_LONG).show();
-                    String tab1_text = jObject.getString("tab1_text");
-                    int active = jObject.getInt("active");
-
-                } // End Loop
-                this.progressDialog.dismiss();
-            } catch (JSONException e) {
-                Log.e("JSONException", "Error: " + e.toString());
-            } // catch (JSONException e)
-        } // protected void onPostExecute(Void v)
-        }*/
 
 
     @Override
@@ -187,14 +127,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        // Build a GoogleSignInClient with the options specified by gso.
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         Log.e("ak47","on Start");
         super.onStart();
         Log.e("ak47","on Start after super");
-       mAuth.addAuthStateListener(authStateListener);
+      mAuth.addAuthStateListener(authStateListener);
         Log.e("ak47","on Start Ends");
     }
 
@@ -206,16 +142,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_main);
 
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        //startActivity(new Intent(this,Login.class));
-        //Vibrator vibrator=(Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        //vibrator.vibrate(1000);
-
-//        mAuth.addAuthStateListener(authStateListener);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -232,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else
                 {
+
+
                     Log.e("ak47","user not null");
                 }
 
@@ -239,68 +173,188 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
+            Intent intent =new Intent();
+            //name=intent.getStringExtra("avatar");
+            ConnectivityBroadcastReceiver connectivityBroadcastReceiver= new ConnectivityBroadcastReceiver();
+            connectivityBroadcastReceiver.onReceive(this,new Intent(this,ConnectivityBroadcastReceiver.class));
+            Log.d("checknet", String.valueOf(isNetworkAvailable()));
+           // photoUrl= Uri.parse(intent.getStringExtra("url"));
             // Name, email address, and profile photo Url
-            name = user.getDisplayName();
+
              email = user.getEmail();
-             photoUrl = user.getPhotoUrl();
-            Toast.makeText(this,name+" is Logged in",Toast.LENGTH_LONG).show();
+            for (UserInfo use:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+                if (use.getProviderId().equals("facebook.com")) {
+                    provider="facebook";
+                }
+                else
+                    provider="google";
+            }
+            FirebaseAuth.getInstance().getCurrentUser().getProviderId();
+            UserInfo userr= FirebaseAuth.getInstance().getCurrentUser();
+                if (provider.equals("facebook")) {
+                    userno=Profile.getCurrentProfile().getId();
 
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
+                }
+                else{
+                    userno=user.getUid();
+                }
 
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            String uid = user.getUid();
+
+
+
+            Toolbar toolbar = findViewById(R.id.toolbar);
+
+            setSupportActionBar(toolbar);
+            bott=findViewById(R.id.navigationView);
+            bott.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+
+
+            toolbar.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference isOnlineRef = rootRef.child(userno).child("isOnline");
+            isOnlineRef.setValue("true");
+            String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+            String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+
+
+            isOnlineRef.onDisconnect().setValue("Last seen "+currentDate+"\n"+currentTime);
+
+
+            drawer = findViewById(R.id.drawer_layout);
+            navigationView = findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+
+            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            navigationView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+            headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+
+            name1=headerView.findViewById(R.id.name);
+            rootRef.child(userno).child("Personal").child("Name").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    name1.setText(dataSnapshot.getValue(String.class));
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            email1=headerView.findViewById(R.id.email);
+            email1.setText(email);
+            userid=headerView.findViewById(R.id.userid);
+            userid.setText(userno);
+
+           profilePhoto=headerView.findViewById(R.id.profilePhoto);
+            int dimensionPixelSize = getResources().getDimensionPixelSize(com.facebook.R.dimen.com_facebook_profilepictureview_preset_size_large);
+            rootRef.child(userno).child("Personal").child("Photo").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    //name1.setText(dataSnapshot.getValue(String.class));
+                    CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(MainActivity.this);
+                    circularProgressDrawable.setStrokeWidth(5f);
+                    circularProgressDrawable.setCenterRadius(100f) ;
+                    circularProgressDrawable.start();
+                    Glide.with(context)
+                            .load(dataSnapshot.getValue(String.class))
+                            .placeholder(circularProgressDrawable)
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(profilePhoto);
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+            ActionBarDrawerToggle actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.open,R.string.close);
+            drawer.addDrawerListener(actionBarDrawerToggle);
+            actionBarDrawerToggle.syncState();
+            FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            HomeFragment booksAvailable=new HomeFragment();
+            fragmentTransaction.add(R.id.fragment_container,booksAvailable);
+            fragmentTransaction.commit();
+            bott.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    FragmentManager fragmentManager=getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.chats:
+                            Chats booksAvailable = new Chats();
+                            fragmentTransaction.replace(R.id.fragment_container, booksAvailable);
+                            fragmentTransaction.commit();
+                            break;
+                        case R.id.status:
+                           startActivity(new Intent(MainActivity.this, Feed.class));
+                           break;
+                        case R.id.post:
+                           startActivity(new Intent(MainActivity.this, Post.class));
+                            break;
+
+                    }
+                    return true ;
+                }
+            });
         }
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-
-         setSupportActionBar(toolbar);
-
-         drawer = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        /*View headerLayout = navigationView.getHeaderView(0);
-        headerLayout =
-                navigationView.inflateHeaderView(R.layout.nav_header_main);
-        View panel = headerLayout.findViewById(R.id.nav_head);*/
-         name1=headerView.findViewById(R.id.name);
-        name1.setText(name);
-        email1=headerView.findViewById(R.id.email);
-        email1.setText(email);
-        profilePhoto=headerView.findViewById(R.id.profilePhoto);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(com.facebook.R.dimen.com_facebook_profilepictureview_preset_size_large);
-        Uri profilePictureUri= Profile.getCurrentProfile().getProfilePictureUri(200 , 200);
-        CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(MainActivity.this);
-        circularProgressDrawable.setStrokeWidth(5f);
-        circularProgressDrawable.setCenterRadius(100f) ;
-        circularProgressDrawable.start();
-      Glide.with(context)
-                .load(profilePictureUri)
-              .placeholder(circularProgressDrawable)
-                .into(profilePhoto);
-
-        ActionBarDrawerToggle actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.open,R.string.close);
-        drawer.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-        HomeFragment booksAvailable=new HomeFragment();
-        fragmentTransaction.add(R.id.fragment_container,booksAvailable);
-        fragmentTransaction.commit();
-
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            // Log.e(TAG, "setxml: peremission prob");
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
 
 
-// panel won't be null
-       /* NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);*/
+        }
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            // Log.e(TAG, "setxml: peremission prob");
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+
+
+        }
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED)
+        {
+            // Log.e(TAG, "setxml: peremission prob");
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},0);
+
+
+        }
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.INTERNET)!= PackageManager.PERMISSION_GRANTED)
+        {
+            // Log.e(TAG, "setxml: peremission prob");
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.INTERNET},0);
+
+
+        }
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.VIBRATE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            // Log.e(TAG, "setxml: peremission prob");
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.VIBRATE},0);
+
+
+        }
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO)!= PackageManager.PERMISSION_GRANTED)
+        {
+            // Log.e(TAG, "setxml: peremission prob");
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.RECORD_AUDIO},0);
+
+
+        }
+
+
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -331,60 +385,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return super.onOptionsItemSelected(item);
     }
-    //Next lines are Strings used as params
-    public static String FACEBOOK_FIELD_PROFILE_IMAGE = "picture.type(large)";
-    public static String FACEBOOK_FIELDS = "fields";
 
-    //A function that can be accessed from OnCreate (Or a similar function)
-    private void setImageProfileFacebook(){
 
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
-
-        if(isLoggedIn) {
-            //If the user is LoggedIn then continue
-            Bundle parameters = new Bundle();
-            parameters.putString(FACEBOOK_FIELDS, FACEBOOK_FIELD_PROFILE_IMAGE);
-            /* make the API call */
-            new GraphRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    "me",
-                    parameters,
-                    HttpMethod.GET,
-                    new GraphRequest.Callback() {
-                        public void onCompleted(GraphResponse response) {
-                            /* handle the result */
-                            if (response != null) {
-                                try {
-                                    JSONObject data = response.getJSONObject();
-                                    //Log.w(TAG, "Data: " + response.toString());
-
-                                    if (data.has("picture")) {
-                                        boolean is_silhouette = data.getJSONObject("picture").getJSONObject("data").getBoolean("is_silhouette");
-                                        if (!is_silhouette) {
-                                            //Silhouette is used when the FB user has no upload any profile image
-                                            URL profilePicUrl = new URL(data.getJSONObject("picture").getJSONObject("data").getString("url"));
-                                            InputStream in = (InputStream) profilePicUrl.getContent();
-                                            Bitmap bitmap = BitmapFactory.decodeStream(in);
-                                            profilePhoto.setImageBitmap(bitmap);
-                                        }
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                Log.w("TAG", "Response null");
-                            }
-                        }
-                    }
-            ).executeAsync();
-        }
-    }
     private void signOut() {
+        OneSignal.setSubscription(false);
         mAuth.signOut();
-        mGoogleSignInClient.signOut();
+        //mGoogleSignInClient.signOut();
     }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -429,6 +437,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //close navigation drawer
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 

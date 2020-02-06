@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="match_parent"
+    tools:context=".Models.Post">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="20dp"
+                android:layout_width="match_parent"
+                app:cardElevation="10dp"
+
+                android:layout_gravity="center"
+                android:layout_height="300dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="top"
+
+
+                        android:background="@drawable/backgraedit"
+                        android:textColor="@android:color/holo_purple"
+                        android:hint="Write a caption..."
+
+
+                        android:id="@+id/feed_upload_content"
+
+                        >
+
+                    </EditText>
+
+
+
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="300dp"
+                android:layout_marginTop="20dp"
+                android:elevation="10dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:focusable="true"
+                android:visibility="gone"
+                android:id="@+id/feedcard"
+
+                android:layout_gravity="center"
+                android:layout_height="300dp"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:id="@+id/post_image_display"
+                    android:layout_height="match_parent">
+
+                </ImageView>
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:background="@android:color/holo_blue_dark"
+                android:elevation="10dp"
+                android:clickable="true"
+                android:id="@+id/add_image_to_post"
+                android:fontFamily="@font/montserrat"
+                android:textAllCaps="false"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:focusable="true"
+                android:textColor="@android:color/white"
+                android:text="Add image from gallery"
+                android:textStyle="bold"
+                android:drawablePadding="10dp"
+                android:layout_height="60dp">
+
+            </Button>
+            <Button
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:background="@android:color/holo_blue_dark"
+                android:elevation="10dp"
+                android:textColor="@android:color/white"
+                android:text="Crop image"
+                android:id="@+id/cropimage"
+                android:clickable="true"
+                android:fontFamily="@font/montserrat"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:focusable="true"
+                android:drawablePadding="10dp"
+                android:layout_height="60dp">
+
+            </Button>
+            <Button
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:background="@android:color/holo_blue_dark"
+                android:elevation="10dp"
+                android:textColor="@android:color/white"
+                android:text="Upload"
+                android:id="@+id/upload_feed"
+                android:clickable="true"
+                android:fontFamily="@font/montserrat"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:focusable="true"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/upload_data"
+                android:layout_height="60dp">
+
+            </Button>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:weightSum="2"
+                android:layout_marginBottom="70dp"
+
+                android:orientation="vertical"
+                android:layout_weight="0.4">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:focusable="true"
+                    android:layout_marginTop="20dp"
+                    android:elevation="10dp"
+
+                    app:cardCornerRadius="40dp"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:weightSum="10"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:id="@+id/share_on_facebook"
+
+                        android:orientation="horizontal"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:src="@drawable/fbicon"
+                            android:layout_height="match_parent">
+
+                        </ImageView>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Share on facebook"
+                            android:gravity="center"
+                            android:textSize="16dp"
+                            android:layout_weight="7">
+
+                        </TextView>
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:src="@drawable/share"
+                            android:padding="10dp"
+                            android:layout_height="match_parent">
+
+                        </ImageView>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:elevation="10dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:focusable="true"
+
+                    app:cardCornerRadius="40dp"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/share_on_instagram"
+                        android:weightSum="10"
+
+                        android:orientation="horizontal"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:padding="10dp"
+                            android:src="@drawable/instagramicon"
+                            android:layout_height="match_parent">
+
+                        </ImageView>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Share on Instagram"
+                            android:gravity="center"
+                            android:textSize="16dp"
+                            android:layout_weight="7">
+
+                        </TextView>
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:padding="10dp"
+                            android:src="@drawable/share"
+                            android:layout_height="match_parent">
+
+                        </ImageView>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

@@ -1,0 +1,124 @@
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="32dp"
+    android:id="@+id/wallpaper"
+    android:background="@android:color/transparent">
+    <TextView
+        android:id="@+id/clear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:fontFamily="@font/montserrat"
+        android:layout_marginBottom="15dp"
+        android:text="Clear Chat"
+        android:textStyle="italic"
+        android:textColor="@android:color/white"
+
+        android:layout_marginRight="24dp"/>
+
+    <TextView
+        android:id="@+id/block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:fontFamily="@font/montserrat"
+        android:layout_marginBottom="15dp"
+        android:text="Block"
+        android:textStyle="italic"
+        android:textColor="@android:color/white"
+
+        android:layout_marginRight="24dp"/>
+
+    <TextView
+        android:id="@+id/mute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:fontFamily="@font/montserrat"
+        android:text="Mute Notification"
+        android:textColor="@android:color/white"
+
+        android:layout_marginRight="24dp"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/changeback"
+        android:fontFamily="@font/montserrat"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:layout_marginTop="15dp"
+        android:text="Change Chat Background"
+        android:textColor="@android:color/white"
+
+        android:layout_marginRight="24dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/original"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/montserrat"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Default Wallpaper"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:visibility="gone">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/fromgallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/montserrat"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Select from gallery"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:visibility="gone">
+
+        </TextView>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -3,52 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"><![CDATA[
 
-    <ImageView
-        android:id="@+id/qrcode"
-        android:layout_width="412dp"
-        android:layout_height="340dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginBottom="350dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-    </ImageView><![CDATA[
 
     android:layout_height="wrap_content">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ]]>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="242dp"
-        android:layout_height="71dp"
-        android:text="Scan this QR code from another device,using HashContact App to connect ."
-        android:textColor="@android:color/darker_gray"
+    <ImageView
+        android:id="@+id/qrcode"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qrcode"
-        app:layout_constraintVertical_bias="0.081" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-    <com.mikhaellopez.circularimageview.CircularImageView
+    </ImageView>
+
+    <ImageView
         android:id="@+id/prof"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="155dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="82dp"
         android:layout_marginEnd="156dp"
-        android:layout_marginBottom="146dp"
+        android:layout_marginBottom="170dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/qrcode" />
 
     <TextView
         android:id="@+id/textView2"
@@ -57,12 +70,55 @@
         android:layout_marginStart="180dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="174dp"
-        android:layout_marginBottom="93dp"
+        android:layout_marginBottom="70dp"
+        android:fontFamily="@font/montserrat"
         android:text="TextView"
+        android:textColor="@android:color/white"
         android:textSize="24dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.564"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/prof" />
+        app:layout_constraintTop_toBottomOf="@+id/prof"
+        app:layout_constraintVertical_bias="0.965" />
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="40dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="400dp"
+        android:layout_marginTop="190dp"
+        android:layout_marginEnd="250dp"
+        android:layout_marginBottom="90dp"
+        android:background="@drawable/share"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/qrcode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.709" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="59dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="37dp"
+        android:fontFamily="@font/opensans"
+        android:text="Share your HashContact QR"
+        android:textColor="@android:color/white"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/qrcode"
+        app:layout_constraintEnd_toStartOf="@+id/send"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

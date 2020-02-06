@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/single_contact_ite"
+    android:focusable="true"
+    android:backgroundTint="@android:color/white"
+    android:layout_marginTop="10dp"
+    android:clickable="true"
+    android:background="?android:selectableItemBackground"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                app:cardCornerRadius="30dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:id="@+id/sin"
+                    android:layout_height="60dp"/>
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="top"
+                android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:id="@+id/singlecontactbooknam"
+                android:textStyle="bold|italic"
+                android:text=""
+                android:textSize="16dp"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/opensans"
+                android:textColor="@android:color/white"
+
+                android:gravity="top"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:id="@+id/msg"
+                    android:textStyle="bold|italic"
+                    android:text=""
+                    android:layout_marginLeft="20dp"
+                    android:fontFamily="@font/opensans"
+                    android:textColor="@android:color/black"
+
+                    android:gravity="top"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="bottom"
+                    android:background="@android:color/darker_gray"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

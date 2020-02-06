@@ -1,0 +1,77 @@
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="32dp"
+    android:id="@+id/addde"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Hash Contact"
+        android:textAppearance="@style/OpenSansTextStyle"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginRight="24dp"/>
+
+
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:textColor="@android:color/holo_purple"
+            android:hint="Enter Hash ID"
+
+
+
+
+            android:background="@drawable/backgraedit"
+            android:id="@+id/hashid"
+
+            >
+
+        </EditText>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:gravity="end"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:id="@+id/cancelc"
+            android:text="Cancel"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:textSize="16sp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textColor="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:id="@+id/addc"
+            android:text="Add"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/darker_gray"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

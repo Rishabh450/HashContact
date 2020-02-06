@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/chats"
+            android:icon="@drawable/chati"
+            android:title="Chats"
+            app:showAsAction="always"/>
+
+        <item
+            android:id="@+id/post"
+            android:icon="@drawable/addfeed"
+            android:title="Post"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/status"
+            android:icon="@drawable/homebut"
+            android:title="Feed"
+            app:showAsAction="always"/>
+
+    </group>
+
+
+
+</menu>

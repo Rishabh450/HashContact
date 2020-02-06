@@ -2,6 +2,7 @@ package com.example.litereria;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +16,24 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.litereria.Support.Details;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
@@ -52,45 +61,122 @@ public class RecyclerViewChatList extends RecyclerView.Adapter<RecyclerViewChatL
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatListViewHolder chatListViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ChatListViewHolder chatListViewHolder, final int i) {
         lastPosition=-1;
         Log.d("bhai", "onBindViewHolder: "+i+" "+contacts);
-        final HashMap<String,String> data=new HashMap<String,String>();
+        final HashMap<String, String>[] data = new HashMap[]{new HashMap<String, String>()};
         String email = String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
-       // FirebaseDatabase database = FirebaseDatabase.getInstance();
-      //  DatabaseReference databaseReference=database.getReference();
 
-//        databaseReference.child(email.substring(0,email.indexOf('@'))).child("Contact").child(String.valueOf(contacts.get(i)));
+        final FirebaseDatabase[] database = {FirebaseDatabase.getInstance()};
+       DatabaseReference databaseReference= database[0].getReference();
+       databaseReference.child(contacts.get(i).get("key")).child("Personal").addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               HashMap<String ,String> mp1=new HashMap<>();
+               mp1=(HashMap<String, String>) dataSnapshot.getValue();
+               Log.d("babes", String.valueOf(mp1));
+               data[0] =mp1;
 
-        data.put("Name",contacts.get(i).get("Name"));
-        data.put("photo",contacts.get(i).get("photo"));
-        data.put("Key",contacts.get(i).get("key"));
-        data.put("Codechef",contacts.get(i).get("Codechef"));
-        data.put("Email",contacts.get(i).get("Email"));
-        data.put("Facebook",contacts.get(i).get("Facebook"));
-        data.put("HackerEarth",contacts.get(i).get("HackerEarth"));
-        data.put("HackerRank",contacts.get(i).get("HackerRank"));
-        data.put("Instagram",contacts.get(i).get("Instagram"));
-        data.put("Twitter",contacts.get(i).get("Twitter"));
-        data.put("github",contacts.get(i).get("github"));
-        data.put("PhoneNumber",contacts.get(i).get("PhoneNumber"));
-        data.put("Linkedin",contacts.get(i).get("Linkedin"));
+
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+       });
+        databaseReference.child(contacts.get(i).get("key")).child("Personal").child("Name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                String namer =dataSnapshot.getValue(String.class);
+                chatListViewHolder.title.setText(namer);
+                Log.d("stringwa",namer);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        final String[] uri = new String[1];
+        databaseReference.child(contacts.get(i).get("key")).child("Personal").child("Photo").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                String namer =dataSnapshot.getValue(String.class);
+                uri[0] =namer;
+                CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(context );
+                circularProgressDrawable.setStrokeWidth(5f);
+                circularProgressDrawable.setCenterRadius(30f) ;
+                circularProgressDrawable.start();
+                // chatListViewHolder.title.setText(name[0]);
+
+               // Log.e("ak47", "onBindViewHolder: "+contacts.get(i).get("Name") );
+                Glide.with(context)
+                        .load(namer)
+                        .placeholder(circularProgressDrawable).into(chatListViewHolder.cover);
+
+             //   Log.d("stringwa",namer);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        data[0].put("Key",contacts.get(i).get("key"));
+
+
+        final Drawable[] img = new Drawable[1];
+        chatListViewHolder.cover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(context );
+                circularProgressDrawable.setStrokeWidth(5f);
+                circularProgressDrawable.setCenterRadius(100f) ;
+                circularProgressDrawable.start();
+
+                Glide.with(context)
+                        .load(uri[0])
+                        .placeholder(circularProgressDrawable)
+
+                        .into(new CustomTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                img[0] =resource;
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                            }
+                        });
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+                View mView = LayoutInflater.from(context).inflate(R.layout.dialog_custom_layout, null);
+                PhotoView photoView = mView.findViewById(R.id.imageview1);
+                photoView.setImageDrawable(img[0]);
+                mBuilder.setView(mView);
+                AlertDialog mDialog = mBuilder.create();
+                mDialog.show();
+            }
+        });
       //  data.put("Source","1");
-        CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(context );
-        circularProgressDrawable.setStrokeWidth(5f);
-        circularProgressDrawable.setCenterRadius(30f) ;
-        circularProgressDrawable.start();
-        chatListViewHolder.title.setText(contacts.get(i).get("Name"));
-        Log.e("ak47", "onBindViewHolder: "+contacts.get(i).get("Name") );
-        Glide.with(context)
-                .load(contacts.get(i).get("photo"))
-    .placeholder(circularProgressDrawable).into(chatListViewHolder.cover);
+
         chatListViewHolder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context, Details.class);
-                intent.putExtra("Data",data);
+                data[0].put("key",contacts.get(i).get("key"));
+            intent.putExtra("Data",data[0]);
                 context.startActivity(intent);
             }
         });

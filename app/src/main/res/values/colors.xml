@@ -3,4 +3,12 @@
     <color name="colorPrimary"> #7f00ff </color>
     <color name="colorPrimaryDark">#00008b</color>
     <color name="colorAccent"> #7f00ff </color>
+    <color name="violet">#7f00ff</color>
+    <color name="gray">#DCDCDC</color>
+    <color name="darkgray">#a9a9a9</color>
+    <color name="blue">#7c40ff</color>
+    <color name="fadeblue">#658cbb</color>
+    <color name="white">#ffffff </color>
+
+    <color name="trans">#80000000</color>
 </resources>

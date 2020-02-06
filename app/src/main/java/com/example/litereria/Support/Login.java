@@ -2,6 +2,7 @@ package com.example.litereria.Support;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.litereria.MainActivity;
 import com.facebook.AccessToken;
@@ -9,15 +10,23 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.litereria.R;
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -43,6 +52,9 @@ public class Login extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
     int RC_SIGN_IN=1;
+    ConstraintLayout constraintLayout;
+    ImageView imageView,image;
+    private ProgressDialog mProgress;
     private CallbackManager mCallbackManager;
     SignInButton signInButton;
     Button facebook_sign_in;
@@ -58,8 +70,15 @@ public class Login extends AppCompatActivity {
         }
     }
     private void sendToMainActicity() {
-        startActivity(new Intent(Login.this, MainActivity.class));
-        finish();
+        mProgress.dismiss();
+        constraintLayout=findViewById(R.id.login);
+        constraintLayout.setVisibility(View.GONE);
+
+        startActivity(new Intent(Login.this, ProfilePhoto.class));
+
+
+
+
     }
 
 
@@ -67,23 +86,85 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        //AppEventsLogger.activateApp(this);
-        //AppEventsLogger.activateApp(this);
-
-
-
         setContentView(R.layout.activity_login);
+        image=findViewById(R.id.imageView);
+
+
+        imageView=findViewById(R.id.img1);
+        imageView.setAlpha(0f);
+        image.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.VISIBLE);
+        image.animate().rotationBy(360f).setDuration(1500).setInterpolator(new LinearInterpolator()).start();
+
+        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(image, "scaleX", 0.7f);
+        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(image, "scaleY", 0.7f);
+        scaleDownX.setDuration(1500);
+        scaleDownY.setDuration(1500);
+
+        ObjectAnimator moveUpY = ObjectAnimator.ofFloat(image, "translationY", -100);
+        moveUpY.setDuration(1500);
+
+        AnimatorSet scaleDown = new AnimatorSet();
+        AnimatorSet moveUp = new AnimatorSet();
+
+        scaleDown.play(scaleDownX).with(scaleDownY);
+        moveUp.play(moveUpY);
+
+        scaleDown.start();
+        moveUp.start();
+        imageView.setBackgroundResource(R.color.violet);
+        imageView.animate()
+
+                .alpha(1f)
+
+                .setDuration(2000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+
+                       // imageView.setBackground(R.color.violet);
+
+                    }
+                });
+        mProgress = new ProgressDialog(this);
+        mProgress.setTitle("Logging in...");
+        mProgress.setMessage("Please wait...");
+        mProgress.setCancelable(true);
+      //  mProgress.setInverseBackgroundForced(setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY));
+
+        mProgress.getWindow().getAttributes().windowAnimations=R.style.MyAnimation_Window;
+
+
+        mProgress.setIndeterminate(true);
         FirebaseApp.initializeApp(this);
 
         mAuth = FirebaseAuth.getInstance();
         signInButton=findViewById(R.id.signin);
         facebook_sign_in=findViewById(R.id.login_button);
+        facebook_sign_in.setVisibility(View.VISIBLE);
+        ObjectAnimator scaleDownX1 = ObjectAnimator.ofFloat(facebook_sign_in, "scaleX", 0.7f);
+        ObjectAnimator scaleDownY1 = ObjectAnimator.ofFloat(facebook_sign_in, "scaleY", 0.7f);
+        scaleDownX1.setDuration(1500);
+        scaleDownY1.setDuration(1500);
+
+        ObjectAnimator moveUpY1 = ObjectAnimator.ofFloat(facebook_sign_in, "translationY", -100);
+        moveUpY1.setDuration(1500);
+
+        AnimatorSet scaleDown1 = new AnimatorSet();
+        AnimatorSet moveUp1 = new AnimatorSet();
+
+        scaleDown1.play(scaleDownX1).with(scaleDownY1);
+        moveUp1.play(moveUpY1);
+
+        scaleDown1.start();
+        moveUp1.start();
+
         mCallbackManager = CallbackManager.Factory.create();
         facebook_sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mProgress.show();
                 LoginManager.getInstance().logInWithReadPermissions(Login.this,
                         Arrays.asList("email", "public_profile"));
                 LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -146,8 +227,7 @@ public class Login extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             sendToMainActicity();
                             //updateUI(user);
-                            Intent intent=new Intent(Login.this,MainActivity.class);
-                            startActivity(intent);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("ak47", "signInWithCredential:failure", task.getException());

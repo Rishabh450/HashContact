@@ -2,10 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent"
     android:layout_width="match_parent"
-    android:background=" #7f00ff "
+    android:id="@+id/login"
+
     android:layout_height="match_parent"
     tools:context=".Support.Login">
+    <ImageView
+        android:id="@+id/img1"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/transparent"
+
+        android:layout_x="0dp"
+        android:layout_y="0dp"
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/signin"
@@ -14,7 +26,7 @@
         android:layout_marginStart="163dp"
         android:layout_marginTop="800dp"
         android:layout_marginEnd="163dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginBottom="552dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,12 +38,17 @@
     <Button
         android:id="@+id/login_button"
         android:layout_width="232dp"
+        android:visibility="gone"
         android:layout_height="66dp"
         android:layout_marginStart="185dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="185dp"
         android:layout_marginBottom="110dp"
-        android:background="@drawable/loginfb"
+        android:background="@drawable/custom_butt"
+        android:text="Login With Facebook"
+        android:drawableRight="@drawable/signright"
+        android:drawableLeft="@drawable/facebookicon"
+        android:textAppearance="@style/MontSerratTextStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
@@ -44,6 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="66dp"
+        android:visibility="gone"
         android:layout_marginTop="218dp"
         android:layout_marginEnd="66dp"
         android:layout_marginBottom="171dp"

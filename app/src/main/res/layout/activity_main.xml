@@ -12,35 +12,57 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:titleTextAppearance="@style/OpenSansTextStyle"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         </FrameLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+
+        android:background="?android:attr/windowBackground"
+
+
+        app:labelVisibilityMode="selected"
+
+
+
+
+        app:menu="@menu/nav_bar" />
+</RelativeLayout>
+
+
 
     </LinearLayout>
 
@@ -49,10 +71,17 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        app:itemTextAppearance="@font/montserrat"
+        app:itemTextColor="@android:color/darker_gray"
+        app:itemIconTint="@android:color/darker_gray"
+
+
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
 
         app:menu="@menu/activity_main_drawer" />
+
+
 
 
 
