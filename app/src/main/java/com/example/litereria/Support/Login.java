@@ -56,7 +56,7 @@ public class Login extends AppCompatActivity {
     ImageView imageView,image;
     private ProgressDialog mProgress;
     private CallbackManager mCallbackManager;
-    SignInButton signInButton;
+    Button signInButton;
     Button facebook_sign_in;
     FirebaseAuth.AuthStateListener mAuthstateListner;
 
@@ -94,15 +94,15 @@ public class Login extends AppCompatActivity {
         imageView.setAlpha(0f);
         image.setVisibility(View.VISIBLE);
         imageView.setVisibility(View.VISIBLE);
-        image.animate().rotationBy(360f).setDuration(1500).setInterpolator(new LinearInterpolator()).start();
+        image.animate().rotationBy(360f).setDuration(500).setInterpolator(new LinearInterpolator()).start();
 
         ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(image, "scaleX", 0.7f);
         ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(image, "scaleY", 0.7f);
-        scaleDownX.setDuration(1500);
-        scaleDownY.setDuration(1500);
+        scaleDownX.setDuration(500);
+        scaleDownY.setDuration(500);
 
         ObjectAnimator moveUpY = ObjectAnimator.ofFloat(image, "translationY", -100);
-        moveUpY.setDuration(1500);
+        moveUpY.setDuration(500);
 
         AnimatorSet scaleDown = new AnimatorSet();
         AnimatorSet moveUp = new AnimatorSet();
@@ -112,21 +112,8 @@ public class Login extends AppCompatActivity {
 
         scaleDown.start();
         moveUp.start();
-        imageView.setBackgroundResource(R.color.violet);
-        imageView.animate()
 
-                .alpha(1f)
 
-                .setDuration(2000)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-
-                       // imageView.setBackground(R.color.violet);
-
-                    }
-                });
         mProgress = new ProgressDialog(this);
         mProgress.setTitle("Logging in...");
         mProgress.setMessage("Please wait...");
@@ -142,7 +129,7 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         signInButton=findViewById(R.id.signin);
         facebook_sign_in=findViewById(R.id.login_button);
-        facebook_sign_in.setVisibility(View.VISIBLE);
+   /*     facebook_sign_in.setVisibility(View.VISIBLE);
         ObjectAnimator scaleDownX1 = ObjectAnimator.ofFloat(facebook_sign_in, "scaleX", 0.7f);
         ObjectAnimator scaleDownY1 = ObjectAnimator.ofFloat(facebook_sign_in, "scaleY", 0.7f);
         scaleDownX1.setDuration(1500);
@@ -158,7 +145,7 @@ public class Login extends AppCompatActivity {
         moveUp1.play(moveUpY1);
 
         scaleDown1.start();
-        moveUp1.start();
+        moveUp1.start();*/
 
         mCallbackManager = CallbackManager.Factory.create();
         facebook_sign_in.setOnClickListener(new View.OnClickListener() {

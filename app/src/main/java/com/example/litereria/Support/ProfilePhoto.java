@@ -152,6 +152,7 @@ proceed=findViewById(R.id.proceed);
                 intent.putExtra("avatar","Hii");
                 intent.putExtra("url",url);
                 startActivity(intent);
+                finish();
 
 
               /*  final FirebaseDatabase database = FirebaseDatabase.getInstance();

@@ -19,33 +19,41 @@
         android:layout_y="0dp"
         tools:ignore="MissingConstraints" />
 
-    <com.google.android.gms.common.SignInButton
+    <Button
         android:id="@+id/signin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
         android:layout_marginStart="163dp"
         android:layout_marginTop="800dp"
+        android:text="Login With Google"
+        android:textAppearance="@style/MontSerratTextStyle"
+
+        android:textSize="12dp"
+        android:drawableRight="@drawable/signright"
+        android:background="@drawable/custom_butt"
+
         android:layout_marginEnd="163dp"
         android:visibility="visible"
-        android:layout_marginBottom="552dp"
+        android:layout_marginBottom="582dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </com.google.android.gms.common.SignInButton>
+    </Button>
 
     <Button
         android:id="@+id/login_button"
-        android:layout_width="232dp"
-        android:visibility="gone"
-        android:layout_height="66dp"
+        android:layout_width="200dp"
+        android:visibility="visible"
+        android:layout_height="60dp"
         android:layout_marginStart="185dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="185dp"
         android:layout_marginBottom="110dp"
         android:background="@drawable/custom_butt"
         android:text="Login With Facebook"
+        android:textSize="12dp"
         android:drawableRight="@drawable/signright"
         android:drawableLeft="@drawable/facebookicon"
         android:textAppearance="@style/MontSerratTextStyle"

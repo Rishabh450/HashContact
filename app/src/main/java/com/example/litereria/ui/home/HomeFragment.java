@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ import com.example.litereria.R;
 import com.example.litereria.RecyclerViewDetails;
 import com.example.litereria.RecyclerViewFiled;
 import com.example.litereria.Support.Details;
+import com.example.litereria.Support.ProfilePhoto;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
@@ -108,6 +110,8 @@ public class HomeFragment extends Fragment {
     String emailids;String name;
     String nameuser;
     Button upload;String id;
+    ImageView load;
+    ProgressBar loader; ProgressDialog mProgress;
 
 
     RecyclerView fieldlist;Button add;
@@ -126,6 +130,18 @@ public class HomeFragment extends Fragment {
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            mProgress = new ProgressDialog(getContext());
+            mProgress.setTitle("Initializing App");
+
+
+
+            mProgress.setCancelable(false);
+
+
+
+            //  mProgress.setInverseBackgroundForced(setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY));
+            mProgress.show();
+
 
             emailids = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             name=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
@@ -193,6 +209,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 textView.setText(dataSnapshot.getValue(String.class));
+                mProgress.dismiss();
 
 
             }
