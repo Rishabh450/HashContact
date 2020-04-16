@@ -1757,6 +1757,8 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
                 if(!messegeComposer.getText().toString().trim().equals("")) {
                     sentflag=1;
+                    final String[] messege = {messegeComposer.getText().toString().trim()};
+                    messegeComposer.setText("");
 
                     final String[] notificationKey = new String[1];
                     final FirebaseDatabase[] database1 = {FirebaseDatabase.getInstance()};
@@ -1764,8 +1766,8 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                     databaseReference1.child(user2).child("Personal").child("Notification").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String messege=messegeComposer.getText().toString().trim();
-                            messegeComposer.setText("");
+
+
                             long ts = (long) System.currentTimeMillis();
                             String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                             try {
@@ -1782,17 +1784,17 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                 e.printStackTrace();
                             }
 
-                            messege=messege+"\n"+currentTime;
+                            messege[0] = messege[0] +"\n"+currentTime;
 
                             notificationKey[0] =dataSnapshot.getValue(String.class);
                             //.title.setText(namer);
                             Log.d("stringwa", notificationKey[0]);
-                            databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).setValue(messege);
+                            databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).setValue(messege[0]);
                             databaseReference.child(currentUser).child("Messege").child(user2).child("lastMessege").setValue(String.valueOf(ts));
 
                             final FirebaseDatabase[] database2 = {FirebaseDatabase.getInstance()};
                             final DatabaseReference databaseReference2= database2[0].getReference().child(user2).child("ChattingWith");
-                            final String finalMessege = messege;
+                            final String finalMessege = messege[0];
                             databaseReference2.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
