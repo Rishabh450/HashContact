@@ -178,13 +178,7 @@ public class RecyclerViewChatList extends RecyclerView.Adapter<RecyclerViewChatL
                 context.startActivity(intent);
             }
         });
-        if(lastPosition==getItemCount()-1)
-            lastPosition=-1;
-        Animation animation = AnimationUtils.loadAnimation(context,
-                (i > lastPosition) ? R.anim.layout_animation
-                        : R.anim.item_animation_fall_down);
-        chatListViewHolder.itemView.startAnimation(animation);
-        lastPosition = i;
+
 
 
     }

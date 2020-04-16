@@ -49,6 +49,7 @@
         android:layout_gravity="bottom"
         android:clickable="true"
         android:focusable="true"
+
         android:layout_height="wrap_content"
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
@@ -56,7 +57,7 @@
         android:background="?android:attr/windowBackground"
 
 
-        app:labelVisibilityMode="selected"
+        app:labelVisibilityMode="labeled"
 
 
 

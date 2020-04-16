@@ -133,13 +133,7 @@ int lastPosition=-1;
 
                 }
             });
-            if (lastPosition == getItemCount() - 1)
-                lastPosition = -1;
-            Animation animation = AnimationUtils.loadAnimation(context,
-                    (position > lastPosition) ? R.anim.layout_animation
-                            : R.anim.item_animation_fall_down);
-            holder.itemView.startAnimation(animation);
-            lastPosition = position;
+
         }
 
 

@@ -7,7 +7,7 @@
         android:toYScale="1.0"
         android:fillAfter="false"
         android:startOffset="200"
-        android:duration="300"
+        android:duration="200"
         android:pivotX = "50%"
         android:pivotY = "-90%"
         />

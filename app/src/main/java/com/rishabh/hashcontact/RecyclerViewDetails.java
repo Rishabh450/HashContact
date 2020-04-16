@@ -44,13 +44,7 @@ public class RecyclerViewDetails extends RecyclerView.Adapter<RecyclerViewDetail
             holder.detailname.setText(contacts.get(position).get("detailname"));
             holder.detail.setText(contacts.get(position).get("detail"));
             holder.detail.getBackground().setAlpha(50);
-            if (lastPosition == getItemCount() - 1)
-                lastPosition = -1;
-            Animation animation = AnimationUtils.loadAnimation(context,
-                    (position > lastPosition) ? R.anim.layout_animation
-                            : R.anim.item_animation_fall_down);
-            holder.itemView.startAnimation(animation);
-            lastPosition = position;
+
 
 
     }
