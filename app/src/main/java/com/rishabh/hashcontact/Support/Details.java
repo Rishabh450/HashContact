@@ -143,7 +143,7 @@ Button contact;
 
             Glide.with(this)
                     .load(uri)
-                    .placeholder(circularProgressDrawable).into(imageView);
+                    .placeholder(R.mipmap.placeholder).into(imageView);
             Glide.with(this)
                     .load(uri)
                     .into(new CustomTarget<Drawable>() {

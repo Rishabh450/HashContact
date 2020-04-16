@@ -2026,7 +2026,8 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                     // Log.e("ak47", "onBindViewHolder: "+contacts.get(i).get("Name") );
                     Glide.with(getApplicationContext())
                             .load(namer)
-                            .placeholder(circularProgressDrawable).into(new CustomTarget<Drawable>() {
+                            .apply(RequestOptions.circleCropTransform())
+                            .placeholder(R.mipmap.placeholder).into(new CustomTarget<Drawable>() {
                         @Override
                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                             img=resource;
@@ -2040,7 +2041,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                     Glide.with(getApplicationContext())
                             .load(namer)
                             .apply(RequestOptions.circleCropTransform())
-                            .placeholder(circularProgressDrawable).
+                            .placeholder(R.mipmap.placeholder).
                     into(dp);
                    // dp.setImageDrawable(img);
 

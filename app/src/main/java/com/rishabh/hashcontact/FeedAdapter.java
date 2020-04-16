@@ -335,6 +335,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             Glide.with(context)
                     .load(feedPosts.get(position).getImageURL())
 
+
 .fitCenter()
                     .listener(new RequestListener<Drawable>() {
                         @Override

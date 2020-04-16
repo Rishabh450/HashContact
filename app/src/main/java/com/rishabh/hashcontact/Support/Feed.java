@@ -194,7 +194,7 @@ public class Feed extends AppCompatActivity {
     }
     public void getData() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Status");
-        reference.keepSynced(true);
+        reference.keepSynced(false);
         reference.addValueEventListener(listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

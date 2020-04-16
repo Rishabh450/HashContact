@@ -119,7 +119,7 @@ public class RecyclerViewChatListt extends RecyclerView.Adapter<RecyclerViewChat
                 // Log.e("ak47", "onBindViewHolder: "+contacts.get(i).get("Name") );
                 Glide.with(context)
                         .load(namer)
-                        .placeholder(circularProgressDrawable).into(chatListViewHolder.cover);
+                        .placeholder(R.mipmap.placeholder).into(chatListViewHolder.cover);
 
                 //   Log.d("stringwa",namer);
 

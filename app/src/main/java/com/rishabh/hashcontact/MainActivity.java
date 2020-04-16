@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     circularProgressDrawable.start();
                     Glide.with(context)
                             .load(dataSnapshot.getValue(String.class))
-                            .placeholder(circularProgressDrawable)
+                            .placeholder(R.mipmap.placeholder)
                             .apply(RequestOptions.circleCropTransform())
                             .into(profilePhoto);
 

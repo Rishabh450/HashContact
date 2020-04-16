@@ -64,7 +64,7 @@ public class PostLikeAdapter extends RecyclerView.Adapter<PostLikeAdapter.ChatLi
                 circularProgressDrawable.start();
                 Glide.with(context)
                         .load(url)
-                        .placeholder(circularProgressDrawable)
+                        .placeholder(R.mipmap.placeholder)
                         .apply(RequestOptions.circleCropTransform())
                         .listener(new RequestListener<Drawable>() {
                             @Override
