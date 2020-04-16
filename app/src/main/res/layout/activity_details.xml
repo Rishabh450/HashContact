@@ -54,18 +54,21 @@
             android:clickable="true"
             android:background="@android:color/transparent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
             android:id="@+id/detaillist"/>
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_gravity="end|bottom"
             android:id="@+id/contact"
             android:padding="10dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground"
             android:focusable="true"
+            android:textAllCaps="true"
+            android:textStyle="bold"
             android:textAppearance="@style/MontSerratTextStyle"
             android:background="@android:color/holo_blue_dark"
-            android:text="Contact"
+            android:text="Chat with this user"
             android:textColor="#FFF"
             android:layout_height="wrap_content">
 
