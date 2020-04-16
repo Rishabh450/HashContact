@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".Support.Feed">
+
+    <LinearLayout
+        android:id="@+id/tool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3dp"
+        android:background="@drawable/shadow1"
+        android:orientation="horizontal"
+
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp">
+        <ImageView
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="top"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/location"
+            android:foreground="?android:attr/selectableItemBackground"
+
+            android:backgroundTint="@android:color/white"
+            android:layout_width="30dp"
+            android:id="@+id/back"
+            android:layout_height="28dp">
+
+        </ImageView>
+        <TextView
+            android:textSize="25dp"
+            android:layout_width="match_parent"
+            android:text="𝓗𝓪𝓼𝓱𝓒𝓸𝓷𝓽𝓪𝓬𝓽"
+            android:layout_marginLeft="10dp"
+            android:gravity="top"
+            android:textColor="@android:color/black"
+            android:layout_height="match_parent">
+
+        </TextView>
+
+    </LinearLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:scrollbars="horizontal"
+
+            android:fillViewport="true"
+
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginTop="1dp"
+        android:elevation="2dp"
+
+        android:layout_height="91dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="80dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+
+            android:layout_height="75dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/statusmypic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="2dp"
+                android:src="@color/gray"
+                android:clickable="true"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@android:color/white"
+                android:cropToPadding="true"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop"></de.hdodenhof.circleimageview.CircleImageView>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="23dp"
+                    android:layout_alignRight="@+id/statusmypic"
+                    android:layout_above="@+id/statuscard"
+                    android:layout_marginTop="43dp"
+                    app:civ_border_color="@android:color/white"
+                    app:civ_border_width="2dp"
+
+                    android:src="@drawable/ic_add_circle_black_24dp"
+                    android:layout_height="23dp">
+
+                </de.hdodenhof.circleimageview.CircleImageView>
+        </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+
+
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/statususer"
+                    android:clickable="true"
+                    android:textSize="8dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/proximanova"
+
+                    android:gravity="left"
+                    android:textColor="@android:color/black"
+                    android:text=" Add story " />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/statusRecycler"
+        android:layout_gravity="top"
+            android:layout_marginLeft="15dp"
+            android:scrollbars="horizontal"
+            android:nestedScrollingEnabled="true"
+
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+        android:layout_height="70dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="2dp"
+        android:nestedScrollingEnabled="false"
+        android:layout_marginTop="1dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/feed_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:nestedScrollingEnabled="true"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </androidx.cardview.widget.CardView>
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>
