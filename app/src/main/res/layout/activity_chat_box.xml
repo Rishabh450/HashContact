@@ -47,6 +47,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:id="@+id/mapfrag"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -72,6 +74,7 @@
                     <LinearLayout
                         android:id="@+id/frag"
                         android:orientation="vertical"
+
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
 
@@ -98,6 +101,11 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
 
 
             <LinearLayout
@@ -105,74 +113,96 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/backgra"
                 android:elevation="3dp"
                 android:orientation="horizontal"
-                android:weightSum="16">
+                android:weightSum="7">
+
+
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_weight="7"
+    android:weightSum="16"
+    android:background="@drawable/backgra"
+
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/emoji"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_weight="2"
+        android:src="@drawable/emoji">
+
+    </ImageView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/clip"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="3dp"
+        android:layout_weight="2.2"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:elevation="6dp"
+
+        android:focusable="true"
+        android:foreground="@drawable/clipper"
+
+        android:foregroundGravity="center"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
 
-                <ImageView
-                    android:id="@+id/emoji"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1.5"
-                    android:src="@drawable/emoji">
 
-                </ImageView>
+    <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+        android:id="@+id/MessgeContent"
+        android:layout_width="0dp"
+        android:layout_height="47dp"
+        android:layout_marginLeft="3dp"
+        android:layout_weight="12"
+        android:background="@android:color/transparent"
+        android:fadeScrollbars="false"
+        android:hint="Type a message"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:minLines="1"
+
+        android:paddingLeft="10dp"
+        android:scrollbars="vertical" />
 
 
 
 
-                <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
-                    android:id="@+id/MessgeContent"
-                    android:layout_width="0dp"
-                    android:layout_height="47dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_weight="11.3"
-                    android:background="@android:color/transparent"
-                    android:fadeScrollbars="false"
-                    android:hint="Type a message"
-                    android:inputType="textMultiLine"
-                    android:maxLines="4"
-                    android:minLines="1"
 
-                    android:paddingLeft="10dp"
-                    android:scrollbars="vertical" />
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/clip"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="3dp"
-                    android:layout_weight="1.7"
-                    android:background="@android:color/transparent"
+</LinearLayout>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="50dp"
+                    app:cardCornerRadius="25dp"
+                    android:id="@+id/feedcard"
                     android:clickable="true"
-                    android:elevation="6dp"
-
                     android:focusable="true"
-                    android:foreground="@drawable/clipper"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_height="50dp">
 
-                    android:foregroundGravity="center"
-                    app:borderWidth="0dp"
-                    app:fabSize="normal"
-                    app:pressedTranslationZ="12dp">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/sendMessege"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:padding="2dp"
+                        app:civ_border_width="2dp"
+                        android:src="@drawable/send"
+                        app:civ_border_color="@android:color/white"
+                        android:cropToPadding="true"
+                        android:background="@drawable/dpback"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="centerCrop"></de.hdodenhof.circleimageview.CircleImageView>
+                </androidx.cardview.widget.CardView>
 
-                </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-
-
-                <Button
-                    android:id="@+id/sendMessege"
-                    android:layout_width="0dp"
-
-                    android:layout_height="36dp"
-                    android:layout_weight="1.7"
-                    android:background="@drawable/send"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground" />
 
             </LinearLayout>
 
@@ -404,8 +434,8 @@
             android:id="@+id/sendimage"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginRight="25dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginLeft="25dp"
             android:layout_marginBottom="55dp"
             android:backgroundTint="@android:color/holo_red_dark"
             android:clickable="true"
@@ -425,8 +455,8 @@
             android:id="@+id/loc"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginRight="25dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginLeft="25dp"
             android:layout_marginBottom="225dp"
             android:backgroundTint="@android:color/holo_green_light"
             android:clickable="true"
@@ -447,8 +477,8 @@
             android:id="@+id/location"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginRight="25dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginLeft="25dp"
             android:layout_marginBottom="139dp"
             android:backgroundTint="@android:color/holo_blue_dark"
             android:clickable="true"
@@ -469,8 +499,8 @@
             android:id="@+id/voice_search"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginRight="25dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginLeft="25dp"
             android:layout_marginBottom="310dp"
             android:backgroundTint="@android:color/holo_orange_dark"
             android:clickable="true"

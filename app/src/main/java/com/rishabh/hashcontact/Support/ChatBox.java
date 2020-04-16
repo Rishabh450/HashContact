@@ -152,10 +152,10 @@ ImageView dp;int sentflag=0;
     EmojiconEditText messegeComposer;
     private GoogleMap mMap;
     private ProgressBar recyclerview_progress;
-    Button send;FloatingActionButton loc;
+    ImageView send;FloatingActionButton loc;
     FloatingActionButton location;FloatingActionButton voice;
     String filename;
-    LinearLayout maplay;
+    LinearLayout maplay,mapfrag;
     Button shareloc;
     ImageView b;RecyclerView recyclerView;
     int emojif=0;
@@ -196,6 +196,7 @@ ImageView dp;int sentflag=0;
         });*/
 
         b=findViewById(R.id.emoji);
+        mapfrag=findViewById(R.id.mapfrag);
 
         recyclerView=findViewById(R.id.chatbox);
         for (UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
@@ -290,6 +291,7 @@ shareloc=findViewById(R.id.shareloc);
 
                 }
                  else{
+                     mapfrag.setVisibility(View.VISIBLE);
                      clip.callOnClick();
                      maplay.animate()
 
@@ -1002,6 +1004,7 @@ dp.setOnClickListener(new View.OnClickListener() {
 
     }
 });
+
 
 
     }
