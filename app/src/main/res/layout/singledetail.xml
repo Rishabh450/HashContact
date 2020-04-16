@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/single_contact_item"
+    android:layout_marginTop="10dp"
+    android:background="@android:color/transparent"
     android:layout_height="wrap_content"
 
     android:orientation="horizontal">
@@ -10,23 +12,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:orientation="vertical">
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_margin="5dp"
-                android:background="#d3d3d3"
-                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:background="@android:color/transparent"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:id="@+id/detailname"
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="#FFF"
                     android:fontFamily="@font/montserrat"
 
                     android:gravity="left"/>
@@ -37,21 +36,16 @@
                     android:id="@+id/detail"
                     android:clickable="true"
                     android:textSize="18sp"
+
                     android:longClickable="true"
                     android:textIsSelectable="true"
-                    android:textColor="@android:color/holo_purple"
+                    android:textColor="#FFF"
                     android:background="@drawable/backgraedit"
                     android:fontFamily="@font/opensans"
                     android:gravity="left|center"/>
 
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginBottom="5dp"
 
-                android:background="#d3d3d3"
-                />
         </LinearLayout>
 
 

@@ -15,10 +15,63 @@
       },
       "oauth_client": [
         {
+          "client_id": "235609262275-3c0b3o335voju1h430f16lv7u8869ge9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.litereria",
+            "certificate_hash": "fdba5a0a0c9f663a8cd087af26d277e99b6ce1f5"
+          }
+        },
+        {
           "client_id": "235609262275-1g10estpgk3mgjqd4csfkhadkvat9om0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.litereria",
+            "certificate_hash": "82662a7b6a4b77ec48aceb485a148770f134e69b"
+          }
+        },
+        {
+          "client_id": "235609262275-q9ck8djinagdlisntsjd2usepcgdvkn0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7IseFH6FWMXqUkmPVpTK3wvC-OkgXvHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235609262275-q9ck8djinagdlisntsjd2usepcgdvkn0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235609262275:android:eb30ffb940984d02677a76",
+        "android_client_info": {
+          "package_name": "com.rishabh.hashcontact"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235609262275-k5asl7di8d7u7sq3qb2vjc97b1mv8mij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rishabh.hashcontact",
+            "certificate_hash": "3d032933b08e28c21628eedc7b7277f8c42c1709"
+          }
+        },
+        {
+          "client_id": "235609262275-n3atemebolopvu42fjahqild56huhk7c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rishabh.hashcontact",
             "certificate_hash": "82662a7b6a4b77ec48aceb485a148770f134e69b"
           }
         },

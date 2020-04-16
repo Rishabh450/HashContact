@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/chatlistlayout"
-    android:background=" #7f00ff"
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -29,6 +28,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
 android:scrollbars="vertical"
+        android:background="@android:color/transparent"
         android:layout_height="match_parent"
         android:id="@+id/chatList"/>
 </LinearLayout>

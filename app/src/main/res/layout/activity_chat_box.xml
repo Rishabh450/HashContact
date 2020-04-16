@@ -43,7 +43,7 @@
                 android:layout_height="340dp"
                 android:layout_above="@+id/composer"
 
-                android:visibility="gone">
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -71,10 +71,17 @@
 
                     <LinearLayout
                         android:id="@+id/frag"
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
 
                         android:clickable="true">
+                        <ProgressBar
+                            android:id="@+id/recycler_view_progress"
+                            android:layout_width="match_parent"
+                            android:layout_height="170dp"
+
+                            android:layout_centerInParent="true" />
 
                         <fragment
 
@@ -87,11 +94,7 @@
                             android:layout_height="match_parent" />
                     </LinearLayout>
 
-                    <ProgressBar
-                        android:id="@+id/recycler_view_progress"
-                        android:layout_width="match_parent"
-                        android:layout_height="170dp"
-                        android:layout_centerInParent="true" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -107,16 +110,6 @@
                 android:orientation="horizontal"
                 android:weightSum="16">
 
-                <Button
-                    android:id="@+id/sendMessege"
-                    android:layout_width="0dp"
-
-                    android:layout_height="36dp"
-                    android:layout_weight="1.5"
-                    android:background="@drawable/send"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground" />
 
 
                 <ImageView
@@ -129,6 +122,24 @@
 
                 </ImageView>
 
+
+
+
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                    android:id="@+id/MessgeContent"
+                    android:layout_width="0dp"
+                    android:layout_height="47dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_weight="11.3"
+                    android:background="@android:color/transparent"
+                    android:fadeScrollbars="false"
+                    android:hint="Type a message"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
+                    android:minLines="1"
+
+                    android:paddingLeft="10dp"
+                    android:scrollbars="vertical" />
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/clip"
                     android:layout_width="0dp"
@@ -151,21 +162,17 @@
                 </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
-                <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
-                    android:id="@+id/MessgeContent"
-                    android:layout_width="0dp"
-                    android:layout_height="47dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_weight="11.3"
-                    android:background="@android:color/transparent"
-                    android:fadeScrollbars="false"
-                    android:hint="Type a message"
-                    android:inputType="textMultiLine"
-                    android:maxLines="4"
-                    android:minLines="1"
 
-                    android:paddingLeft="10dp"
-                    android:scrollbars="vertical" />
+                <Button
+                    android:id="@+id/sendMessege"
+                    android:layout_width="0dp"
+
+                    android:layout_height="36dp"
+                    android:layout_weight="1.7"
+                    android:background="@drawable/send"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground" />
 
             </LinearLayout>
 
@@ -173,7 +180,8 @@
                 android:id="@+id/tool"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shadow"
+                android:background="@mipmap/toolb"
+
                 android:elevation="3dp"
                 android:orientation="horizontal"
 
@@ -192,6 +200,16 @@
                     android:foreground="?android:attr/selectableItemBackground">
 
                 </Button>
+                <ImageView
+                    android:id="@+id/dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginLeft="10dp"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                </ImageView>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -215,6 +233,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
+                        android:fontFamily="@font/proximanova"
 
                         android:text=""
                         android:textColor="#FFFFFF"
@@ -234,6 +253,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:visibility="gone"
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="20dp"
 
@@ -289,15 +309,7 @@
 
                     app:cardCornerRadius="20dp">
 
-                    <ImageView
-                        android:id="@+id/dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
 
-                    </ImageView>
                 </androidx.cardview.widget.CardView>
 
 
@@ -347,18 +359,7 @@
                 </LinearLayout>
 
 
-                <TextView
-                    android:id="@+id/seen"
-                    android:layout_width="68dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="right"
-                    android:layout_weight="0.7"
-                    android:foregroundGravity="top"
-                    android:gravity="top"
-                    android:text=""
-                    android:textColor="@android:color/black">
 
-                </TextView>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/mediaList"
@@ -379,6 +380,19 @@
                     android:scrollbars="vertical">
 
                 </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/seen"
+                    android:layout_width="68dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="right"
+                    android:layout_weight="0.7"
+                    android:foregroundGravity="top"
+
+
+                    android:text=""
+                    android:textColor="@android:color/darker_gray">
+
+                </TextView>
 
 
             </LinearLayout>

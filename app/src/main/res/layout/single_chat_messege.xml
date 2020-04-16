@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:longClickable="true"
+    android:clickable="true"
     android:orientation="vertical"
     android:id="@+id/ChatBubbleContainer"
     android:layout_height="wrap_content">
@@ -9,6 +11,7 @@
         android:id="@+id/recivedMessegeBubble"
         android:layout_width="wrap_content"
         android:layout_marginTop="10dp"
+        android:fontFamily="@font/proximanova"
 
         android:elevation="3dp"
         android:textColor="@android:color/black"
@@ -61,6 +64,7 @@ android:background="@drawable/icoming"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:gravity="left"
+        android:fontFamily="@font/proximanova"
 
 
         android:background="@drawable/outgoing"

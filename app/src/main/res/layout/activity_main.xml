@@ -14,10 +14,13 @@
         >
 <RelativeLayout
     android:layout_width="match_parent"
+
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
+        android:id="@+id/root"
+        android:background="@mipmap/profile_background"
         android:layout_height="match_parent"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -26,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:titleTextAppearance="@style/OpenSansTextStyle"
-            android:background="?attr/colorPrimary"
+            android:background="@android:color/transparent"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
         <FrameLayout
             android:id="@+id/fragment_container"
@@ -45,7 +48,6 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
         android:focusable="true"
         android:layout_height="wrap_content"
         app:itemIconTint="@android:color/white"

@@ -1,80 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:layout_height="match_parent"
+    android:background="@mipmap/background"
     tools:context=".Support.ProfilePhoto">
     <androidx.cardview.widget.CardView
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         app:cardCornerRadius="20dp"
-        android:layout_gravity="center"
         android:elevation="6dp"
+        android:layout_centerInParent="true"
+        android:backgroundTint="@android:color/transparent"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_height="wrap_content">
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/backgraedit"
-        android:textColor="@android:color/holo_purple"
-        android:hint="Enter AVATAR"
-
-
-        android:id="@+id/avatar"
-
-        >
-
-    </EditText>
-
-    <Button
-        android:layout_width="match_parent"
-        android:id="@+id/uploadfromgall"
-        android:clickable="true"
-        android:layout_marginTop="20dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:focusable="true"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_blue_dark"
-        android:layout_height="wrap_content"
-        android:text="upload profile picture">
-
-    </Button>
-    <Button
-        android:layout_width="match_parent"
-        android:id="@+id/defaultpic"
-        android:clickable="true"
-        android:layout_marginTop="20dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:focusable="true"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_blue_light"
-        android:layout_height="wrap_content"
-        android:text="default profile picture">
-
-    </Button>
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:id="@+id/proceed"
-            android:clickable="true"
-            android:layout_marginTop="20dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true"
-            android:textColor="@android:color/white"
-            android:background="@android:color/holo_blue_dark"
-            android:layout_height="wrap_content"
-            android:text="proceed">
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_height="wrap_content">
 
-        </Button>
-    </LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/editt"
+                android:textColor="#FFF"
+                android:gravity="center"
+                android:fontFamily="@font/proximanova"
+                android:hint="ENTER AVATAR NAME"
+                android:textColorHint="@android:color/darker_gray"
+
+
+
+
+                android:id="@+id/avatar"
+
+                >
+
+            </EditText>
+
+            <Button
+                android:layout_width="match_parent"
+                android:id="@+id/uploadfromgall"
+                android:clickable="true"
+                android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:fontFamily="@font/proximanova"
+                android:allowUndo="false"
+                android:foreground="?android:attr/selectableItemBackground"
+
+
+                android:textColor="#FFF"
+                android:background="#FFF"
+                android:layout_height="wrap_content"
+                android:text="upload profile picture">
+
+            </Button>
+            <Button
+                android:layout_width="match_parent"
+                android:id="@+id/defaultpic"
+                android:clickable="true"
+                android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:textColor="#FFF"
+                android:textAllCaps="true"
+                android:foreground="?android:attr/selectableItemBackground"
+
+                android:background="#FFF"
+                android:layout_height="wrap_content"
+                android:text="default profile picture">
+
+            </Button>
+            <Button
+                android:layout_width="match_parent"
+                android:id="@+id/proceed"
+                android:clickable="true"
+                android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:textAllCaps="true"
+                android:textColor="#FFF"
+                android:foreground="?android:attr/selectableItemBackground"
+
+                android:background="#FFF"
+                android:layout_height="wrap_content"
+                android:text="proceed">
+
+            </Button>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 
-</LinearLayout>
+
+</RelativeLayout
+    >

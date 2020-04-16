@@ -18,7 +18,7 @@
         android:layout_marginBottom="15dp"
         android:text="Clear Chat"
         android:textStyle="italic"
-        android:textColor="@android:color/white"
+        android:textColor="#FFF"
 
         android:layout_marginRight="24dp"/>
 
@@ -34,7 +34,7 @@
         android:layout_marginBottom="15dp"
         android:text="Block"
         android:textStyle="italic"
-        android:textColor="@android:color/white"
+        android:textColor="#FFF"
 
         android:layout_marginRight="24dp"/>
 
@@ -49,7 +49,7 @@
         android:gravity="center"
         android:fontFamily="@font/montserrat"
         android:text="Mute Notification"
-        android:textColor="@android:color/white"
+        android:textColor="#FFF"
 
         android:layout_marginRight="24dp"/>
 
@@ -66,7 +66,7 @@
         android:textStyle="italic"
         android:layout_marginTop="15dp"
         android:text="Change Chat Background"
-        android:textColor="@android:color/white"
+        android:textColor="#FFF"
 
         android:layout_marginRight="24dp"/>
 
@@ -92,7 +92,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="Default Wallpaper"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="#FFF"
             android:textSize="16sp"
             android:textStyle="italic"
             android:visibility="gone">
@@ -110,8 +110,9 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:padding="10dp"
+
             android:text="Select from gallery"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="#FFF"
             android:textSize="16sp"
             android:textStyle="italic"
             android:visibility="gone">

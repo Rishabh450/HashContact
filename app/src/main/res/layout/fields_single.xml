@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:background="@android:color/transparent"
     android:layout_height="wrap_content">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/detailnam"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
+        android:textColor="#FFF"
         android:fontFamily="@font/montserrat"
 
         android:gravity="left"/>
@@ -17,12 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/n"
+        android:background="@android:color/transparent"
         app:errorEnabled="true"
-        android:backgroundTint="#d3d3d3">
+        android:backgroundTint="@android:color/darker_gray">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:textColor="@android:color/holo_purple"
+            android:textColor="#FFF"
 
 
             android:background="@drawable/backgraedit"

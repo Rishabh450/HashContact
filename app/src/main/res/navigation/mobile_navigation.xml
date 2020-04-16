@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.litereria.ui.home.HomeFragment"
+        android:name="com.rishabh.hashcontact.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.litereria.ui.gallery.GalleryFragment"
+        android:name="com.rishabh.hashcontact.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" >
         <action
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.example.litereria.ui.slideshow.SlideshowFragment"
+        android:name="com.rishabh.hashcontact.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
 

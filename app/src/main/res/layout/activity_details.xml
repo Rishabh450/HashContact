@@ -4,19 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/zoom"
+    android:background="@mipmap/background"
+
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Support.Details">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#BC090801"
+            android:background="@android:color/transparent"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <FrameLayout
@@ -35,7 +38,7 @@
         android:clickable="true"
         android:layout_height="150dp"
         android:layout_marginTop="30dp"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
 
 
         />
@@ -49,7 +52,7 @@
             android:layout_width="match_parent"
             android:focusable="true"
             android:clickable="true"
-            android:background="?android:selectableItemBackground"
+            android:background="@android:color/transparent"
             android:layout_height="match_parent"
             android:id="@+id/detaillist"/>
         <Button
@@ -61,8 +64,9 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:focusable="true"
             android:textAppearance="@style/MontSerratTextStyle"
-            android:background="@drawable/custom_butt"
+            android:background="@android:color/holo_blue_dark"
             android:text="Contact"
+            android:textColor="#FFF"
             android:layout_height="wrap_content">
 
         </Button>

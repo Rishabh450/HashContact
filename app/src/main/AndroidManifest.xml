@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.litereria">
+    package="com.rishabh.hashcontact">
 
     <application
-        android:name=".MApplication"
+        android:name="com.rishabh.hashcontact.MApplication"
         android:allowBackup="true"
-        android:icon="@drawable/get"
+        android:icon="@mipmap/logohash"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/get"
+        android:roundIcon="@mipmap/logohash"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Models.Post"></activity>
-        <activity android:name=".Support.UploadStatus" />
-        <receiver android:name=".ConnectivityBroadcastReceiver">
+        <activity android:name="com.rishabh.hashcontact.Models.Post"></activity>
+        <activity android:name="com.rishabh.hashcontact.Support.UploadStatus" />
+        <receiver android:name="com.rishabh.hashcontact.ConnectivityBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -20,12 +20,12 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Support.SeenBy" />
-        <activity android:name=".Support.SeeStatus" />
-        <activity android:name=".Support.FeedComments" />
-        <activity android:name=".Support.Likes" />
-        <activity android:name=".Support.Feed" />
-        <activity android:name=".Support.ProfilePhoto" />
+        <activity android:name="com.rishabh.hashcontact.Support.SeenBy" />
+        <activity android:name="com.rishabh.hashcontact.Support.SeeStatus" />
+        <activity android:name="com.rishabh.hashcontact.Support.FeedComments" />
+        <activity android:name="com.rishabh.hashcontact.Support.Likes" />
+        <activity android:name="com.rishabh.hashcontact.Support.Feed" />
+        <activity android:name="com.rishabh.hashcontact.Support.ProfilePhoto" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -34,14 +34,14 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <activity android:name=".MapsActivity" />
-        <activity android:name=".Support.ChatBox" />
+        <activity android:name="com.rishabh.hashcontact.MapsActivity" />
+        <activity android:name="com.rishabh.hashcontact.Support.ChatBox" />
         <activity
-            android:name=".Support.Details"
-            android:parentActivityName=".MainActivity" />
+            android:name="com.rishabh.hashcontact.Support.Details"
+            android:parentActivityName="com.rishabh.hashcontact.MainActivity" />
         <activity
-            android:name=".Support.QRcode"
-            android:parentActivityName=".MainActivity" />
+            android:name="com.rishabh.hashcontact.Support.QRcode"
+            android:parentActivityName="com.rishabh.hashcontact.MainActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -58,21 +58,21 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name="com.rishabh.hashcontact.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Support.Login" />
+        <activity android:name="com.rishabh.hashcontact.Support.Login" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity" />
+            android:value="com.rishabh.hashcontact.MainActivity" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

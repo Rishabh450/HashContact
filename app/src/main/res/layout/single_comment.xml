@@ -64,6 +64,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:weightSum="6"
+
                         android:orientation="horizontal"
                        >
                 <TextView
@@ -85,6 +86,8 @@
                             android:layout_width="0dp"
                             android:layout_weight="2"
                             android:text="5 like"
+
+                            android:visibility="gone"
                             android:layout_marginLeft="10dp"
                             android:fontFamily="@font/proximanova"
 
@@ -103,6 +106,7 @@
                             android:layout_weight="2"
                             android:text="Reply"
                             android:textStyle="bold"
+                            android:visibility="gone"
                             android:fontFamily="@font/proximanova"
 
                             android:layout_gravity="center"

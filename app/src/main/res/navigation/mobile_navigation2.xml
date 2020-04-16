@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.litereria.ui.gallery.GalleryFragment"
+        android:name="com.rishabh.hashcontact.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" >
 
