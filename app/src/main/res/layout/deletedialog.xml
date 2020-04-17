@@ -6,11 +6,18 @@
     android:padding="32dp"
     android:id="@+id/addde"
     android:background="@android:color/transparent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/seenat"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="@style/OpenSansTextStyle"
+        android:layout_marginRight="24dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
+        android:text="Delete For Everyone"
         android:textAppearance="@style/OpenSansTextStyle"
         android:layout_marginRight="24dp"/>
 

@@ -14,9 +14,12 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.net.http.DelegatingSSLSession;
 import android.os.Build;
 import android.os.Environment;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
@@ -51,7 +54,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 import pl.droidsonroids.gif.GifImageView;
 
 public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewChatAdapter.ChatViewHolder>{
-    ArrayList<Messege> messeges=new ArrayList<Messege>();
+    ArrayList<Messege> messeges;
     Context context;
     String currentuser;
     String seconduser;
@@ -63,8 +66,8 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
         this.seconduser=seconduser;
 
     }
-    public String getEmojiByUnicodee(){
-        int unicode= 0x2714;
+    public String getEmojiByUnicodee(int unicode){
+
         return new String(Character.toChars(unicode));
     }
 
@@ -113,88 +116,104 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final ChatViewHolder chatViewHolder, final int i) {
-        Log.d("ak47", "onBindViewHolder: "+i);
-        String[] arr= messeges.get(i).messege.trim().split("\n");
-        chatViewHolder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(context);
-                final View view = LayoutInflater.from(context).inflate(R.layout.deletedialog, null);
-                builder.setView(view);
-                final Dialog dialog=builder.create();
+        if(messeges!=null) {
+            String stat=getEmojiByUnicode(0x2714);
+            if(messeges.get(i).status==null)
+                stat=getEmojiByUnicode(0x23F0);
+            SpannableString ssemoji = new SpannableString(stat);
+            ssemoji.setSpan(new RelativeSizeSpan(0.2f), 0, stat.length() -1, 0);
+            ssemoji.setSpan(new ForegroundColorSpan(Color.GRAY), 0, ssemoji.length() - 1, 0);// set color
 
-                dialog.setContentView(R.layout.deletedialog);
-                dialog.getWindow().getAttributes().windowAnimations=R.style.MyAnimation_Window;
-                dialog.getWindow().setBackgroundDrawableResource(R.color.trans);
-                // (0x80000000, PorterDuff.Mode.MULTIPLY);
-                dialog.show();
+            Log.d("ak47", "onBindViewHolder: " + i);
+            String[] arr = messeges.get(i).messege.trim().split("\n");
+            chatViewHolder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (messeges.get(i).sent == true&&messeges.get(i).status!=null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        final View view = LayoutInflater.from(context).inflate(R.layout.deletedialog, null);
+                        builder.setView(view);
+                        final Dialog dialog = builder.create();
 
-                ImageButton addButton =dialog.findViewById(R.id.delete);
-                TextView cancelButton = (TextView) dialog.findViewById(R.id.cancel);
+                        dialog.setContentView(R.layout.deletedialog);
+                        dialog.getWindow().getAttributes().windowAnimations = R.style.MyAnimation_Window;
+                        dialog.getWindow().setBackgroundDrawableResource(R.color.trans);
+                        // (0x80000000, PorterDuff.Mode.MULTIPLY);
+                        dialog.show();
 
-                addButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("testtt",String.valueOf(currentuser+" "+seconduser +" " +messeges.get(i).getTime())+" ");
-                       FirebaseDatabase.getInstance().getReference().child("Communication").child(currentuser).child("Messege").child(seconduser).child("chat").child(String.valueOf(messeges.get(i).getTime())).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                           @Override
-                           public void onSuccess(Void aVoid) {
-                               dialog.dismiss();
-                               Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
+                        ImageButton addButton = dialog.findViewById(R.id.delete);
+                        TextView cancelButton = (TextView) dialog.findViewById(R.id.cancel);
+                        TextView sentst=(TextView)dialog.findViewById(R.id.seenat);
+                        sentst.setText(messeges.get(i).status);
+
+                        addButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d("testtt", String.valueOf(currentuser + " " + seconduser + " " + messeges.get(i).getTime()) + " ");
+                                FirebaseDatabase.getInstance().getReference().child("Communication").child(currentuser).child("Messege").child(seconduser).child("chat").child(String.valueOf(messeges.get(i).getTime())).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        dialog.dismiss();
+                                        Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
 
 
-                           }
-                       });
+                                    }
+                                });
 
 
-                        }
-                });
+                            }
+                        });
 
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.cancel();
+                            }
+                        });
+
+
+                        return true;
                     }
-                });
-
-
-                return true;
-            }
-        });
-
-        if(messeges.get(i).messege.trim().indexOf("https://fire")==0)
-        {   char[] emoji=Character.toChars(0x1F4C1);
-            String emojii = getEmojiByUnicode(0x1F4C1);
-            final String imgname=messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ")+1).trim();
-            final String extension=imgname.substring(imgname.lastIndexOf(".")+1).trim();
-
-            if(extension.equalsIgnoreCase("png")||extension.equalsIgnoreCase("jpg")||extension.equalsIgnoreCase("jpeg"))
-            {
-
-
-                { if (messeges.get(i).sent) {
-                    chatViewHolder.sent.setVisibility(View.GONE);
-                    chatViewHolder.recived.setVisibility(View.GONE);
-                    chatViewHolder.sendImage.setVisibility(View.VISIBLE);
-                    chatViewHolder.recievedImage.setVisibility(View.GONE);
-                    chatViewHolder.recievedgif.setVisibility(View.GONE);
-                    chatViewHolder.sendgif.setVisibility(View.GONE);
-                }
-                else
-
-                { chatViewHolder.sendImage.setVisibility(View.GONE);
-                    chatViewHolder.recievedImage.setVisibility(View.VISIBLE);
-                    chatViewHolder.recievedgif.setVisibility(View.GONE);
-                    chatViewHolder.sendgif.setVisibility(View.GONE);
-                    chatViewHolder.sent.setVisibility(View.GONE);
-                    chatViewHolder.recived.setVisibility(View.GONE);
-                }
+                    else
+                        return false;
                 }
 
-                CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(context);
-                circularProgressDrawable.setStrokeWidth(5f);
-                circularProgressDrawable.setCenterRadius(30f) ;
-                circularProgressDrawable.start();
+
+            });
+
+            if (messeges.get(i).messege.trim().indexOf("https://fire") == 0) {
+                char[] emoji = Character.toChars(0x1F4C1);
+                String emojii = getEmojiByUnicode(0x1F4C1);
+                final String imgname = messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ") + 1).trim();
+                final String extension = imgname.substring(imgname.lastIndexOf(".") + 1).trim();
+
+                if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")) {
+
+
+                    {
+                        if (messeges.get(i).sent) {
+                            chatViewHolder.sent.setVisibility(View.GONE);
+                            chatViewHolder.sendstatus.setVisibility(View.GONE);
+                            chatViewHolder.recived.setVisibility(View.GONE);
+                            chatViewHolder.sendImage.setVisibility(View.VISIBLE);
+                            chatViewHolder.recievedImage.setVisibility(View.GONE);
+                            chatViewHolder.recievedgif.setVisibility(View.GONE);
+                            chatViewHolder.sendgif.setVisibility(View.GONE);
+                        } else {
+                            chatViewHolder.sendImage.setVisibility(View.GONE);
+                            chatViewHolder.recievedImage.setVisibility(View.VISIBLE);
+                            chatViewHolder.recievedgif.setVisibility(View.GONE);
+                            chatViewHolder.sendgif.setVisibility(View.GONE);
+                            chatViewHolder.sent.setVisibility(View.GONE);
+                            chatViewHolder.sendstatus.setVisibility(View.GONE);
+                            chatViewHolder.recived.setVisibility(View.GONE);
+                        }
+                    }
+
+                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+                    circularProgressDrawable.setStrokeWidth(5f);
+                    circularProgressDrawable.setCenterRadius(30f);
+                    circularProgressDrawable.start();
               /*  final Drawable[] img = new Drawable[1];
                 Glide.with(context)
                         .load(messeges.get(i).messege.trim().substring(0,messeges.get(i).messege.indexOf(" ")))
@@ -210,84 +229,84 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                     }
                 });*/
 
-                Glide.with(context)
-                        .load(messeges.get(i).messege.trim().substring(0,messeges.get(i).messege.indexOf(" ")))
-                        .placeholder(circularProgressDrawable).into(chatViewHolder.recievedImage);
-                Glide.with(context)
-                        .load(messeges.get(i).messege.trim().substring(0,messeges.get(i).messege.indexOf(" ")))
-                        .placeholder(circularProgressDrawable).into(chatViewHolder.sendImage);
-                chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FileOutputStream outStream = null;
-                        //Bitmap bit=drawableToBitmap(img[0]);
+                    Glide.with(context)
+                            .load(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")))
+                            .placeholder(circularProgressDrawable).into(chatViewHolder.recievedImage);
+                    Glide.with(context)
+                            .load(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")))
+                            .placeholder(circularProgressDrawable).into(chatViewHolder.sendImage);
+                    chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FileOutputStream outStream = null;
+                            //Bitmap bit=drawableToBitmap(img[0]);
 
-                        //FileOutputStream outStream = null;
-                        try {
-                            final File sdCard = Environment.getExternalStorageDirectory();
-                            File file = new File(sdCard.getAbsolutePath() + "/HashContact"+"/Pictures/"+imgname);
-                            if(!file.exists()) {
-                                //Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.chatback);
-                                Log.d("pathssss", "onPictureTaken - wrote to ");
+                            //FileOutputStream outStream = null;
+                            try {
+                                final File sdCard = Environment.getExternalStorageDirectory();
+                                File file = new File(sdCard.getAbsolutePath() + "/HashContact" + "/Pictures/" + imgname);
+                                if (!file.exists()) {
+                                    //Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.chatback);
+                                    Log.d("pathssss", "onPictureTaken - wrote to ");
 
 
-                                File dir = new File(sdCard.getAbsolutePath() + "/HashContact" + "/Pictures");
-                                dir.mkdirs();
-                                long t = System.currentTimeMillis();
-                                String time = String.valueOf(t);
+                                    File dir = new File(sdCard.getAbsolutePath() + "/HashContact" + "/Pictures");
+                                    dir.mkdirs();
+                                    long t = System.currentTimeMillis();
+                                    String time = String.valueOf(t);
 
-                                String fileName = imgname;
-                                fileName.trim();
-                                Log.d("pathsssss", "onPictureTaken - wrote to " + fileName);
+                                    String fileName = imgname;
+                                    fileName.trim();
+                                    Log.d("pathsssss", "onPictureTaken - wrote to " + fileName);
 
-                                File outFile = new File(dir, fileName);
-                                Log.d("pathsssss", "onPictureTaken - wrote to " + fileName + dir);
-                                URL url = null;
-                                try {
-                                    url = new URL(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")));
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                }
-                                //File f = null;
-                                //String url1 = ;
-                                Toast.makeText(context, "Download Started", Toast.LENGTH_SHORT).show();
+                                    File outFile = new File(dir, fileName);
+                                    Log.d("pathsssss", "onPictureTaken - wrote to " + fileName + dir);
+                                    URL url = null;
+                                    try {
+                                        url = new URL(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")));
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    //File f = null;
+                                    //String url1 = ;
+                                    Toast.makeText(context, "Download Started", Toast.LENGTH_SHORT).show();
 
-                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(String.valueOf(url)));
-                                request.setDescription("Download HashFile");
-                                request.setTitle(imgname);
+                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(String.valueOf(url)));
+                                    request.setDescription("Download HashFile");
+                                    request.setTitle(imgname);
 // in order for this if to run, you must use the android 3.2 to compile your app
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                                    request.allowScanningByMediaScanner();
-                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                }
-                                Log.d("bhaiwa",Environment.DIRECTORY_DOWNLOADS);
-                                request.setDestinationInExternalPublicDir( "HashContact/Pictures", imgname);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                                        request.allowScanningByMediaScanner();
+                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                    }
+                                    Log.d("bhaiwa", Environment.DIRECTORY_DOWNLOADS);
+                                    request.setDestinationInExternalPublicDir("HashContact/Pictures", imgname);
 
 // get download service and enqueue file
-                                DownloadManager manager = (DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);
-                                // manager.enqueue(request);
-                                final long downloadID = manager.enqueue(request);
-                                Log.d("downid", String.valueOf(downloadID));
-                                // final long downloadID = downloadManager.enqueue(request);
-                                BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
-                                    @Override
-                                    public void onReceive(Context context, Intent intent) {
-                                        //Fetching the download id received with the broadcast
-                                        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                                        Log.d("downid1", String.valueOf(downloadID)+" "+id);
+                                    DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                                    // manager.enqueue(request);
+                                    final long downloadID = manager.enqueue(request);
+                                    Log.d("downid", String.valueOf(downloadID));
+                                    // final long downloadID = downloadManager.enqueue(request);
+                                    BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
+                                        @Override
+                                        public void onReceive(Context context, Intent intent) {
+                                            //Fetching the download id received with the broadcast
+                                            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                                            Log.d("downid1", String.valueOf(downloadID) + " " + id);
 
-                                        //Checking if the received broadcast is for our enqueued download by matching download id
-                                        if (downloadID == id) {
-                                            Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
-                                            Intent intenti = new Intent(Intent.ACTION_VIEW);
-                                            intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact"+"/Pictures/"+imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact"+"/Pictures/"+imgname));
+                                            //Checking if the received broadcast is for our enqueued download by matching download id
+                                            if (downloadID == id) {
+                                                Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
+                                                Intent intenti = new Intent(Intent.ACTION_VIEW);
+                                                intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact" + "/Pictures/" + imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact" + "/Pictures/" + imgname));
 
-                                            context.startActivity(intenti);
+                                                context.startActivity(intenti);
+                                            }
                                         }
-                                    }
 
-                                };
-                                context.registerReceiver(onDownloadComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                                    };
+                                    context.registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
 
                                 /*try {
@@ -301,19 +320,17 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                             outStream.flush();
                             outStream.close();
 */
-                                Log.d("pathssss", "onPictureTaken - wrote to " + outFile.getAbsolutePath());
+                                    Log.d("pathssss", "onPictureTaken - wrote to " + outFile.getAbsolutePath());
+                                } else {
+                                    Intent intenti = new Intent(Intent.ACTION_VIEW);
+                                    intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact" + "/Pictures/" + imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact" + "/Pictures/" + imgname));
+
+                                    context.startActivity(intenti);
+                                }
+
+
+                            } finally {
                             }
-                            else {
-                                Intent intenti = new Intent(Intent.ACTION_VIEW);
-                                intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact"+"/Pictures/"+imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact"+"/Pictures/"+imgname));
-
-                                context.startActivity(intenti);
-                            }
-
-
-
-                        } finally {
-                        }
 
 
 
@@ -356,150 +373,157 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                         }
 */
 
+                        }
+                    });
+
+                } else if (extension.equalsIgnoreCase("gif")) {
+                    if (messeges.get(i).sent) {
+                        chatViewHolder.sent.setVisibility(View.GONE);
+                        chatViewHolder.sendstatus.setVisibility(View.GONE);
+                        chatViewHolder.recived.setVisibility(View.GONE);
+                        chatViewHolder.sendImage.setVisibility(View.GONE);
+                        chatViewHolder.recievedImage.setVisibility(View.GONE);
+                        chatViewHolder.sendgif.setVisibility(View.VISIBLE);
+                        chatViewHolder.recievedgif.setVisibility(View.GONE);
+                    } else {
+                        chatViewHolder.sent.setVisibility(View.GONE);
+                        chatViewHolder.sendstatus.setVisibility(View.GONE);
+                        chatViewHolder.recived.setVisibility(View.GONE);
+                        chatViewHolder.sendImage.setVisibility(View.GONE);
+                        chatViewHolder.recievedImage.setVisibility(View.GONE);
+                        chatViewHolder.recievedgif.setVisibility(View.VISIBLE);
+                        chatViewHolder.sendgif.setVisibility(View.GONE);
+
                     }
-                });
+                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+                    circularProgressDrawable.setStrokeWidth(5f);
+                    circularProgressDrawable.setCenterRadius(30f);
+                    circularProgressDrawable.start();
 
-            }
-          else if(extension.equalsIgnoreCase("gif"))
-            { if (messeges.get(i).sent) {
-                chatViewHolder.sent.setVisibility(View.GONE);
-                chatViewHolder.recived.setVisibility(View.GONE);
-chatViewHolder.sendImage.setVisibility(View.GONE);
-chatViewHolder.recievedImage.setVisibility(View.GONE);
-                chatViewHolder.sendgif.setVisibility(View.VISIBLE);
-                chatViewHolder.recievedgif.setVisibility(View.GONE);
-            }
-            else {
-                chatViewHolder.sent.setVisibility(View.GONE);
-                chatViewHolder.recived.setVisibility(View.GONE);
-                chatViewHolder.sendImage.setVisibility(View.GONE);
-                chatViewHolder.recievedImage.setVisibility(View.GONE);
-                chatViewHolder.recievedgif.setVisibility(View.VISIBLE);
-                chatViewHolder.sendgif.setVisibility(View.GONE);
+                    Glide.with(context)
+                            .asGif()
+                            .load(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")))
 
-            }
-                CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(context);
-                circularProgressDrawable.setStrokeWidth(5f);
-                circularProgressDrawable.setCenterRadius(30f) ;
-                circularProgressDrawable.start();
+                            .placeholder(circularProgressDrawable).into(chatViewHolder.recievedgif);
+                    Glide.with(context)
+                            .asGif()
+                            .load(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")))
+                            .placeholder(circularProgressDrawable).into(chatViewHolder.sendgif);
+                    chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                Glide.with(context)
-                        .asGif()
-                        .load(messeges.get(i).messege.trim().substring(0,messeges.get(i).messege.indexOf(" ")))
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" "))));
+                            context.startActivity(intent);
+                        }
+                    });
 
-                        .placeholder(circularProgressDrawable).into(chatViewHolder.recievedgif);
-                Glide.with(context)
-                        .asGif()
-                        .load(messeges.get(i).messege.trim().substring(0,messeges.get(i).messege.indexOf(" ")))
-                        .placeholder(circularProgressDrawable).into(chatViewHolder.sendgif);
-                chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" "))));
-                        context.startActivity(intent);
-                    }
-                });
-
-            } else {
-                chatViewHolder.sendImage.setVisibility(View.GONE);
-                chatViewHolder.recievedImage.setVisibility(View.GONE);
-
-                chatViewHolder.recievedgif.setVisibility(View.GONE);
-                chatViewHolder.sendgif.setVisibility(View.GONE);
-                if (messeges.get(i).sent) {
-                    chatViewHolder.sent.setVisibility(View.VISIBLE);
-                    chatViewHolder.recived.setVisibility(View.GONE);
                 } else {
-                    chatViewHolder.recived.setVisibility(View.VISIBLE);
-                    chatViewHolder.sent.setVisibility(View.GONE);
-                }
+                    chatViewHolder.sendImage.setVisibility(View.GONE);
+                    chatViewHolder.recievedImage.setVisibility(View.GONE);
 
-                chatViewHolder.recived.setText("\n" + "\t" + emojii + "\t" + Uri.parse(messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ") + 1)) + "\t" + "\n");
-                chatViewHolder.sent.setText("\n" + "\t" + emojii + "\t" + Uri.parse(messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ") + 1)) + "\t" + "\n");
-
-                chatViewHolder.recived.setTextSize(15.5f);
-                chatViewHolder.sent.setTextSize(15.5f);
-
-
-                chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        FileOutputStream outStream = null;
-                        try {
-                            final File sdCard = Environment.getExternalStorageDirectory();
-                            File file = new File(sdCard.getAbsolutePath() + "/HashContact"+"/Files/"+imgname);
-                            if(!file.exists()) {
-                                //Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.chatback);
-                                Log.d("pathssss", "onPictureTaken - wrote to ");
+                    chatViewHolder.recievedgif.setVisibility(View.GONE);
+                    chatViewHolder.sendgif.setVisibility(View.GONE);
+                    if (messeges.get(i).sent) {
+                        chatViewHolder.sent.setVisibility(View.VISIBLE);
+                        chatViewHolder.sendstatus.setVisibility(View.VISIBLE);
+                        chatViewHolder.recived.setVisibility(View.GONE);
+                    } else {
+                        chatViewHolder.recived.setVisibility(View.VISIBLE);
+                        chatViewHolder.sent.setVisibility(View.GONE);
+                        chatViewHolder.sendstatus.setVisibility(View.GONE);
+                    }
 
 
-                                File dir = new File(sdCard.getAbsolutePath() + "/HashContact" + "/Files");
-                                dir.mkdirs();
-                                long t = System.currentTimeMillis();
-                                String time = String.valueOf(t);
 
-                                String fileName = imgname;
-                                fileName.trim();
-                                Log.d("pathsssss", "onPictureTaken - wrote to " + fileName);
 
-                                File outFile = new File(dir, fileName);
-                                Log.d("pathsssss", "onPictureTaken - wrote to " + fileName + dir);
-                                URL url = null;
-                                try {
-                                    url = new URL(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")));
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                }
-                                //File f = null;
-                                //String url1 = ;
-                                Toast.makeText(context, "Download Started", Toast.LENGTH_SHORT).show();
-                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(String.valueOf(url)));
-                                request.setDescription("Download HashFile");
-                                request.setTitle(imgname);
+
+                        chatViewHolder.recived.setText("\n" + "\t" + emojii + "\t" + Uri.parse(messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ") + 1)) + "\t" + "\n");
+
+                    chatViewHolder.sent.setText("\n" + "\t" + emojii + "\t" + Uri.parse(messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ") + 1)) + "\t" + "\n");
+                    chatViewHolder.sendstatus.setText(ssemoji);
+                    chatViewHolder.recived.setTextSize(15.5f);
+                    chatViewHolder.sent.setTextSize(15.5f);
+
+
+                    chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            FileOutputStream outStream = null;
+                            try {
+                                final File sdCard = Environment.getExternalStorageDirectory();
+                                File file = new File(sdCard.getAbsolutePath() + "/HashContact" + "/Files/" + imgname);
+                                if (!file.exists()) {
+                                    //Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.chatback);
+                                    Log.d("pathssss", "onPictureTaken - wrote to ");
+
+
+                                    File dir = new File(sdCard.getAbsolutePath() + "/HashContact" + "/Files");
+                                    dir.mkdirs();
+                                    long t = System.currentTimeMillis();
+                                    String time = String.valueOf(t);
+
+                                    String fileName = imgname;
+                                    fileName.trim();
+                                    Log.d("pathsssss", "onPictureTaken - wrote to " + fileName);
+
+                                    File outFile = new File(dir, fileName);
+                                    Log.d("pathsssss", "onPictureTaken - wrote to " + fileName + dir);
+                                    URL url = null;
+                                    try {
+                                        url = new URL(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")));
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    //File f = null;
+                                    //String url1 = ;
+                                    Toast.makeText(context, "Download Started", Toast.LENGTH_SHORT).show();
+                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(String.valueOf(url)));
+                                    request.setDescription("Download HashFile");
+                                    request.setTitle(imgname);
 // in order for this if to run, you must use the android 3.2 to compile your app
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                                    request.allowScanningByMediaScanner();
-                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                }
-                                Log.d("bhaiwa",Environment.DIRECTORY_DOWNLOADS);
-                                request.setDestinationInExternalPublicDir( "HashContact/Files", imgname);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                                        request.allowScanningByMediaScanner();
+                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                    }
+                                    Log.d("bhaiwa", Environment.DIRECTORY_DOWNLOADS);
+                                    request.setDestinationInExternalPublicDir("HashContact/Files", imgname);
 
 // get download service and enqueue file
-                                DownloadManager manager = (DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);
-                               // manager.enqueue(request);
-                                final long downloadID = manager.enqueue(request);
-                                Log.d("downid", String.valueOf(downloadID));
-                                // final long downloadID = downloadManager.enqueue(request);
-                                BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
-                                    @Override
-                                    public void onReceive(Context context, Intent intent) {
-                                        //Fetching the download id received with the broadcast
-                                        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                                        Log.d("downid1", String.valueOf(downloadID)+" "+id);
+                                    DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                                    // manager.enqueue(request);
+                                    final long downloadID = manager.enqueue(request);
+                                    Log.d("downid", String.valueOf(downloadID));
+                                    // final long downloadID = downloadManager.enqueue(request);
+                                    BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
+                                        @Override
+                                        public void onReceive(Context context, Intent intent) {
+                                            //Fetching the download id received with the broadcast
+                                            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                                            Log.d("downid1", String.valueOf(downloadID) + " " + id);
 
-                                        //Checking if the received broadcast is for our enqueued download by matching download id
-                                        if (downloadID == id) {
-                                            Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
-                                            Intent intenti = new Intent(Intent.ACTION_VIEW);
-                                            intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact"+"/Files/"+imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact"+"/Files/"+imgname));
-                                            intenti.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                            //Checking if the received broadcast is for our enqueued download by matching download id
+                                            if (downloadID == id) {
+                                                Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
+                                                Intent intenti = new Intent(Intent.ACTION_VIEW);
+                                                intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact" + "/Files/" + imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact" + "/Files/" + imgname));
+                                                intenti.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                                            try {
-                                                context.startActivity(intenti);
+                                                try {
+                                                    context.startActivity(intenti);
 
-                                               }catch (ActivityNotFoundException e){
-                                            Toast.makeText(context, "No Application found to open this type of file.", Toast.LENGTH_LONG).show();
+                                                } catch (ActivityNotFoundException e) {
+                                                    Toast.makeText(context, "No Application found to open this type of file.", Toast.LENGTH_LONG).show();
 
+                                                }
+
+
+                                            }
                                         }
 
-
-                                        }
-                                    }
-
-                                };
-                             context.registerReceiver(onDownloadComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                                    };
+                                    context.registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
 
                                 /*try {
@@ -513,196 +537,198 @@ chatViewHolder.recievedImage.setVisibility(View.GONE);
                             outStream.flush();
                             outStream.close();
 */
-                                Log.d("pathssss", "onPictureTaken - wrote to " + outFile.getAbsolutePath());
-                            }
-                            else {
-                                Intent intenti = new Intent(Intent.ACTION_VIEW);
-                                intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact"+"/Files/"+imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact"+"/Files/"+imgname));
+                                    Log.d("pathssss", "onPictureTaken - wrote to " + outFile.getAbsolutePath());
+                                } else {
+                                    Intent intenti = new Intent(Intent.ACTION_VIEW);
+                                    intenti.setDataAndType(Uri.parse(sdCard.getAbsolutePath() + "/HashContact" + "/Files/" + imgname), getMimeType(sdCard.getAbsolutePath() + "/HashContact" + "/Files/" + imgname));
 
-                                try {
-                                    context.startActivity(intenti);
+                                    try {
+                                        context.startActivity(intenti);
 
-                                } catch (ActivityNotFoundException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(context, "No Application found to open this type of file.", Toast.LENGTH_LONG).show();
+                                    } catch (ActivityNotFoundException e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(context, "No Application found to open this type of file.", Toast.LENGTH_LONG).show();
 
+                                    }
                                 }
+
+
+                            } finally {
                             }
-
-
-
-                        } finally {
-                        }
 
 
 
 
                         /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" "))));
                         context.startActivity(intent);*/
-                    }
-                });
+                        }
+                    });
 
-            }
-
-
-        } else if(isEmoji(arr[0])) {
-            chatViewHolder.sendImage.setVisibility(View.GONE);
-            chatViewHolder.recievedImage.setVisibility(View.GONE);
-            chatViewHolder.recievedgif.setVisibility(View.GONE);
-            chatViewHolder.sendgif.setVisibility(View.GONE);
-            String s= messeges.get(i).messege+" ";
-            SpannableString ss1=  new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(0.3f), s.length()-9,s.length()-1, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.GRAY), s.length()-9, s.length()-1, 0);// set color
-            if (messeges.get(i).sent) {
-                chatViewHolder.sent.setVisibility(View.VISIBLE);
-                chatViewHolder.recived.setVisibility(View.GONE);
-            } else {
-                chatViewHolder.recived.setVisibility(View.VISIBLE);
-                chatViewHolder.sent.setVisibility(View.GONE);
-            }
-            chatViewHolder.recived.setText(ss1);
-            chatViewHolder.sent.setText(ss1);
-            chatViewHolder.recived.setTextSize(30f);
-            chatViewHolder.sent.setTextSize(30f);
-
-        }
-        else {
+                }
 
 
-            if (messeges.get(i).messege.trim().indexOf("https://tse") !=0) {
+            } else if (isEmoji(arr[0])) {
                 chatViewHolder.sendImage.setVisibility(View.GONE);
                 chatViewHolder.recievedImage.setVisibility(View.GONE);
                 chatViewHolder.recievedgif.setVisibility(View.GONE);
                 chatViewHolder.sendgif.setVisibility(View.GONE);
-Log.d("nahimila",messeges.get(i).messege.trim());
-            String s = messeges.get(i).messege + " ";
-            SpannableString ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(0.6f), s.length() - 9, s.length() - 1, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.GRAY), s.length() - 9, s.length() - 1, 0);// set color
+                String s = messeges.get(i).messege + " ";
+                SpannableString ss1 = new SpannableString(s);
+                ss1.setSpan(new RelativeSizeSpan(0.3f), s.length() - 9, s.length() - 1, 0); // set size
+                ss1.setSpan(new ForegroundColorSpan(Color.GRAY), s.length() - 9, s.length() - 1, 0);// set color
                 if (messeges.get(i).sent) {
                     chatViewHolder.sent.setVisibility(View.VISIBLE);
+                    chatViewHolder.sendstatus.setVisibility(View.VISIBLE);
                     chatViewHolder.recived.setVisibility(View.GONE);
                 } else {
                     chatViewHolder.recived.setVisibility(View.VISIBLE);
                     chatViewHolder.sent.setVisibility(View.GONE);
+                    chatViewHolder.sendstatus.setVisibility(View.GONE);
                 }
-            chatViewHolder.recived.setText(ss1);
-            chatViewHolder.sent.setText(ss1);
-            chatViewHolder.recived.setTextSize(17.5f);
-            chatViewHolder.sent.setTextSize(17.5f);
-            if (messeges.get(i).messege.trim().indexOf("https://") == 0) {
+                chatViewHolder.recived.setText(ss1);
+                chatViewHolder.sent.setText(TextUtils.concat(ss1));
+                chatViewHolder.sendstatus.setText(ssemoji);
+                chatViewHolder.recived.setTextSize(30f);
+                chatViewHolder.sent.setTextSize(30f);
 
-                chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.length() - 1 - 7)));
-                        context.startActivity(intent);
-                    }
-                });
+            } else {
 
 
-            }
-                if(messeges.get(i).messege.trim().indexOf("LOCATION:-")==0)
-                {
-                    final Double lat,lon;
-                    String m =messeges.get(i).messege.trim().substring(0,s.length()-9);
-                    lat=Double.parseDouble(m.substring(m.indexOf(":-")+2,m.indexOf("||")));
-                    lon=Double.parseDouble(m.substring(m.indexOf("||")+2,m.length()));
-                     s ="Tap to open location"+"\n"+ messeges.get(i).messege.substring(s.length()-9,s.length()-1) + " ";
-
-                     ss1 = new SpannableString(s);
+                if (messeges.get(i).messege.trim().indexOf("https://tse") != 0) {
+                    chatViewHolder.sendImage.setVisibility(View.GONE);
+                    chatViewHolder.recievedImage.setVisibility(View.GONE);
+                    chatViewHolder.recievedgif.setVisibility(View.GONE);
+                    chatViewHolder.sendgif.setVisibility(View.GONE);
+                    Log.d("nahimila", messeges.get(i).messege.trim());
+                    String s = messeges.get(i).messege + " ";
+                    SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(0.6f), s.length() - 9, s.length() - 1, 0); // set size
                     ss1.setSpan(new ForegroundColorSpan(Color.GRAY), s.length() - 9, s.length() - 1, 0);// set color
                     if (messeges.get(i).sent) {
                         chatViewHolder.sent.setVisibility(View.VISIBLE);
+                        chatViewHolder.sendstatus.setVisibility(View.VISIBLE);
                         chatViewHolder.recived.setVisibility(View.GONE);
                     } else {
                         chatViewHolder.recived.setVisibility(View.VISIBLE);
                         chatViewHolder.sent.setVisibility(View.GONE);
+                        chatViewHolder.sendstatus.setVisibility(View.GONE);
                     }
                     chatViewHolder.recived.setText(ss1);
-                    chatViewHolder.sent.setText(ss1);
+                    chatViewHolder.sent.setText(TextUtils.concat(ss1));
+                    chatViewHolder.sendstatus.setText(ssemoji);
                     chatViewHolder.recived.setTextSize(17.5f);
                     chatViewHolder.sent.setTextSize(17.5f);
-                    Log.d("ak47",lat+" "+lon);
-                    chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lon + " ("+")";
+                    if (messeges.get(i).messege.trim().indexOf("https://") == 0) {
 
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                            context.startActivity(intent);
-                        }
-                    });
+                        chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-
-                }
-
-            boolean isNumber = true;
-            final long d;
-            try {
-                d = Long.parseLong(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.length() - 1 - 7).trim());
-                chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_DIAL);
-                        intent.setData(Uri.parse("tel:" + d));
-                        context.startActivity(intent);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.length() - 1 - 7)));
+                                context.startActivity(intent);
+                            }
+                        });
 
 
                     }
-                });
-            } catch (NumberFormatException nfe) {
-                Log.d("omegaa", String.valueOf(isNumber));
-                isNumber = false;
+                    if (messeges.get(i).messege.trim().indexOf("LOCATION:-") == 0) {
+                        final Double lat, lon;
+                        String m = messeges.get(i).messege.trim().substring(0, s.length() - 9);
+                        lat = Double.parseDouble(m.substring(m.indexOf(":-") + 2, m.indexOf("||")));
+                        lon = Double.parseDouble(m.substring(m.indexOf("||") + 2, m.length()));
+                        s = "Tap to open location" + "\n" + messeges.get(i).messege.substring(s.length() - 9, s.length() - 1) + " ";
+
+                        ss1 = new SpannableString(s);
+                        ss1.setSpan(new RelativeSizeSpan(0.6f), s.length() - 9, s.length() - 1, 0); // set size
+                        ss1.setSpan(new ForegroundColorSpan(Color.GRAY), s.length() - 9, s.length() - 1, 0);// set color
+                        if (messeges.get(i).sent) {
+                            chatViewHolder.sent.setVisibility(View.VISIBLE);
+                            chatViewHolder.sendstatus.setVisibility(View.VISIBLE);
+                            chatViewHolder.recived.setVisibility(View.GONE);
+                        } else {
+                            chatViewHolder.recived.setVisibility(View.VISIBLE);
+                            chatViewHolder.sent.setVisibility(View.GONE);
+                            chatViewHolder.sendstatus.setVisibility(View.GONE);
+                        }
+                        chatViewHolder.recived.setText(ss1);
+                        chatViewHolder.sent.setText(TextUtils.concat(ss1));
+                        chatViewHolder.sendstatus.setText(ssemoji);
+                        chatViewHolder.recived.setTextSize(17.5f);
+                        chatViewHolder.sent.setTextSize(17.5f);
+                        Log.d("ak47", lat + " " + lon);
+                        chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lon + " (" + ")";
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                                context.startActivity(intent);
+                            }
+                        });
+
+
+                    }
+
+                    boolean isNumber = true;
+                    final long d;
+                    try {
+                        d = Long.parseLong(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.length() - 1 - 7).trim());
+                        chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_DIAL);
+                                intent.setData(Uri.parse("tel:" + d));
+                                context.startActivity(intent);
+
+
+                            }
+                        });
+                    } catch (NumberFormatException nfe) {
+                        Log.d("omegaa", String.valueOf(isNumber));
+                        isNumber = false;
+                    }
+
+
+                } else {
+
+                    Log.d("load nhi liya", messeges.get(i).messege.trim());
+                    String gifsite = messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.length() - 1 - 7).trim();
+                    if (messeges.get(i).sent) {
+                        chatViewHolder.sent.setVisibility(View.GONE);
+                        chatViewHolder.recived.setVisibility(View.GONE);
+                        chatViewHolder.sendImage.setVisibility(View.GONE);
+                        chatViewHolder.recievedImage.setVisibility(View.GONE);
+                        chatViewHolder.sendgif.setVisibility(View.VISIBLE);
+                        chatViewHolder.recievedgif.setVisibility(View.GONE);
+                    } else {
+                        chatViewHolder.sent.setVisibility(View.GONE);
+                        chatViewHolder.recived.setVisibility(View.GONE);
+                        chatViewHolder.sendImage.setVisibility(View.GONE);
+                        chatViewHolder.recievedImage.setVisibility(View.GONE);
+                        chatViewHolder.recievedgif.setVisibility(View.VISIBLE);
+                        chatViewHolder.sendgif.setVisibility(View.GONE);
+                    }
+
+                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+                    circularProgressDrawable.setStrokeWidth(5f);
+                    circularProgressDrawable.setCenterRadius(30f);
+                    circularProgressDrawable.start();
+
+                    Glide.with(context)
+                            .asGif()
+                            .load(gifsite.trim())
+
+                            .placeholder(circularProgressDrawable).into(chatViewHolder.recievedgif);
+                    Glide.with(context)
+                            .asGif()
+                            .load(gifsite.trim())
+                            .placeholder(circularProgressDrawable).into(chatViewHolder.sendgif);
+
+
+                }
             }
 
-
-
         }
-            else{
-
-                Log.d("load nhi liya",messeges.get(i).messege.trim());
-                String gifsite=messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.length() - 1 - 7).trim();
-                if (messeges.get(i).sent) {
-                    chatViewHolder.sent.setVisibility(View.GONE);
-                    chatViewHolder.recived.setVisibility(View.GONE);
-                    chatViewHolder.sendImage.setVisibility(View.GONE);
-                    chatViewHolder.recievedImage.setVisibility(View.GONE);
-                    chatViewHolder.sendgif.setVisibility(View.VISIBLE);
-                    chatViewHolder.recievedgif.setVisibility(View.GONE);
-                }
-                else{
-                    chatViewHolder.sent.setVisibility(View.GONE);
-                    chatViewHolder.recived.setVisibility(View.GONE);
-                    chatViewHolder.sendImage.setVisibility(View.GONE);
-                    chatViewHolder.recievedImage.setVisibility(View.GONE);
-                    chatViewHolder.recievedgif.setVisibility(View.VISIBLE);
-                    chatViewHolder.sendgif.setVisibility(View.GONE);
-                }
-
-                CircularProgressDrawable circularProgressDrawable = new  CircularProgressDrawable(context);
-                circularProgressDrawable.setStrokeWidth(5f);
-                circularProgressDrawable.setCenterRadius(30f) ;
-                circularProgressDrawable.start();
-
-                Glide.with(context)
-                        .asGif()
-                        .load(gifsite.trim())
-
-                        .placeholder(circularProgressDrawable).into(chatViewHolder.recievedgif);
-                Glide.with(context)
-                        .asGif()
-                        .load(gifsite.trim())
-                        .placeholder(circularProgressDrawable).into(chatViewHolder.sendgif);
-
-
-            }
-        }
-
-
 
     }
     private String getMimeType(String url)
@@ -719,32 +745,36 @@ Log.d("nahimila",messeges.get(i).messege.trim());
 
     @Override
     public int getItemCount() {
-        Log.d("ak47", "getItemCount: "+messeges.size());
+        //Log.d("ak47", "getItemCount: "+messeges.size());
+        if(messeges!=null)
         return messeges.size();
+        else
+            return  0;
     }
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
+    public static Bitmap drawableToBitmap (Drawable drawable){
+            Bitmap bitmap = null;
 
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
+            if (drawable instanceof BitmapDrawable) {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                if (bitmapDrawable.getBitmap() != null) {
+                    return bitmapDrawable.getBitmap();
+                }
             }
-        }
 
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
+            if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+                bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+            } else {
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            }
 
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+
     }
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
-        EmojiconTextView sent,recived;
+        EmojiconTextView sent,recived,sendstatus;
         LinearLayout linearLayout;
         ImageView sendImage,recievedImage;
 
@@ -755,6 +785,7 @@ Log.d("nahimila",messeges.get(i).messege.trim());
             sent=itemView.findViewById(R.id.sendMessegeBubble);
 
             recived=itemView.findViewById(R.id.recivedMessegeBubble);
+            sendstatus=itemView.findViewById(R.id.sendstatus);
             linearLayout=itemView.findViewById(R.id.ChatBubbleContainer);
             sent.setEmojiconSize(120);
             recived.setEmojiconSize(120);

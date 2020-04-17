@@ -5,6 +5,7 @@ public class Messege implements Comparable<Messege>{
     public String messege;
     public boolean sent;
     public long time;
+    String status;
 
     public String getMessege() {
         return messege;
@@ -30,10 +31,19 @@ public class Messege implements Comparable<Messege>{
         this.time = time;
     }
 
-    public Messege(String messege, long time, boolean sent){
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Messege(String messege, long time, boolean sent, String status){
         this.messege=messege;
         this.sent=sent;
         this.time=time;
+        this.status=status;
     }
     @Override
     public int compareTo(Messege o) {

@@ -111,6 +111,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -1442,9 +1443,10 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                 long size=chatAdapter.getItemCount();
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                 {
-                    Log.e("ak471",dataSnapshot1.getValue()+" "+dataSnapshot1.getKey());
-                    if(!dataSnapshot1.getKey().equals("isTyping")&&!dataSnapshot1.getKey().equals("chattingAt")&&!dataSnapshot1.getKey().equals("lastMessege")&&!dataSnapshot1.getKey().equals("seen")&&!dataSnapshot1.getKey().equals("lastMessegee")&&!dataSnapshot1.getKey().equals("Notification")&&!dataSnapshot1.getKey().equals("Block")){
-                    Messege m=new Messege((String) dataSnapshot1.getValue(),Long.parseLong(dataSnapshot1.getKey()) ,true);
+                    Log.e("ak471",dataSnapshot1.getValue()+" "+dataSnapshot1.getKey()+" ");
+                    if(!dataSnapshot1.getKey().equals("isTyping")&&!dataSnapshot1.getKey().equals("chattingAt")&&!dataSnapshot1.getKey().equals("lastMessege")&&!dataSnapshot1.getKey().equals("seen")&&!dataSnapshot1.getKey().equals("lastMessegee")&&!dataSnapshot1.getKey().equals("Notification")&&!dataSnapshot1.getKey().equals("Block"))
+                    {
+                    Messege m=new Messege((String) dataSnapshot1.child("msg").getValue(),Long.parseLong(dataSnapshot1.getKey()) , true,dataSnapshot1.child("status").getValue(String.class));
 
                     sent.add(m);
                     }
@@ -1481,7 +1483,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                 {
                     if(!dataSnapshot1.getKey().equals("isTyping")&&!dataSnapshot1.getKey().equals("chattingAt")&&!dataSnapshot1.getKey().equals("lastMessege")&&!dataSnapshot1.getKey().equals("lastMessegee")&&!dataSnapshot1.getKey().equals("seen")&&!dataSnapshot1.getKey().equals("Notification")&&!dataSnapshot1.getKey().equals("Block")){
-                    Messege m=new Messege((String) dataSnapshot1.getValue(),Long.valueOf(dataSnapshot1.getKey()),false);
+                    Messege m=new Messege((String) dataSnapshot1.child("msg").getValue(),Long.valueOf(dataSnapshot1.getKey()),false,dataSnapshot1.child("status").getValue(String.class));
                     recive.add(m);
                     recyclerView.scrollToPosition(0);}
                 }
@@ -1771,7 +1773,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-                            long ts = (long) System.currentTimeMillis();
+                            final long ts = (long) System.currentTimeMillis();
                             String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                             try {
 
@@ -1792,7 +1794,15 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                             notificationKey[0] =dataSnapshot.getValue(String.class);
                             //.title.setText(namer);
                             Log.d("stringwa", notificationKey[0]);
-                            databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).setValue(messege[0]);
+                            databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("msg").setValue(messege[0]).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    String currentDateAndTime = new SimpleDateFormat("hh:mm a dd-MM").format(new Date());
+
+                                    databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("status").setValue("sent"+" at "+currentDateAndTime);
+
+                                }
+                            });
                             databaseReference.child(currentUser).child("Messege").child(user2).child("lastMessege").setValue(String.valueOf(ts));
 
                             final FirebaseDatabase[] database2 = {FirebaseDatabase.getInstance()};
@@ -2454,10 +2464,16 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
-                            public void onSuccess(Uri uri) {
-                                long ts = (long) System.currentTimeMillis();
+                            public void onSuccess(final Uri uri) {
+                                final long ts = (long) System.currentTimeMillis();
 
-                                databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).setValue(uri.toString()+" "+filename);
+                                databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("msg").setValue(uri.toString()+" "+filename).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("status").setValue("sent");
+
+                                    }
+                                });
 
                                 databaseReference.child(currentUser).child("Messege").child(user2).child("lastMessege").setValue(String.valueOf(ts));
                                 newMessageMap.put("/media/" + mediaIdList.get(totalMediaUploaded) + "/", uri.toString());
