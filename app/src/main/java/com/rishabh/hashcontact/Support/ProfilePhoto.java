@@ -157,6 +157,7 @@ public class ProfilePhoto extends AppCompatActivity {
 
 
                     startActivity(intent);
+                    finish();
                 }
                 else
                 {

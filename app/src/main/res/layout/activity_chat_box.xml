@@ -197,7 +197,7 @@
                         android:src="@drawable/send"
                         app:civ_border_color="@android:color/white"
                         android:cropToPadding="true"
-                        android:background="@drawable/dpback"
+                        android:background="@android:color/white"
                         android:layout_gravity="center_vertical"
                         android:scaleType="centerCrop"></de.hdodenhof.circleimageview.CircleImageView>
                 </androidx.cardview.widget.CardView>
@@ -306,17 +306,17 @@
 
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:layout_marginTop="5dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="17.5dp"
 
-                        app:cardCornerRadius="15dp">
+                        app:cardCornerRadius="20dp">
 
                         <ImageView
                             android:id="@+id/call"
-                            android:layout_width="35dp"
-                            android:layout_height="21dp"
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
 
                             android:backgroundTint="@android:color/white"

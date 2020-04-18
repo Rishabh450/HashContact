@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         android:text="Delete For Everyone"
         android:fontFamily="@font/montserrat"
+        android:textColor="@android:color/white"
         android:layout_marginTop="20dp"
         android:textSize="18dp"
 
@@ -66,6 +67,7 @@
             android:padding="10dp"
             android:id="@+id/cancel"
             android:text="Cancel"
+            android:fontFamily="@font/montserrat"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground"
             android:focusable="true"

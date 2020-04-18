@@ -56,14 +56,18 @@ android:background="@drawable/icoming"
     </pl.droidsonroids.gif.GifImageView>
 
 
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="right"
+    android:gravity="left"
+    android:layout_height="wrap_content">
     <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
         android:id="@+id/sendMessegeBubble"
         android:layout_width="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:gravity="left"
+
         android:fontFamily="@font/proximanova"
 
 
@@ -80,30 +84,36 @@ android:background="@drawable/icoming"
 
         android:text="Send Messege"
         />
+
     <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
         android:id="@+id/sendstatus"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:gravity="left"
+        android:layout_marginTop="-10dp"
+        android:gravity="right"
+        android:layout_marginRight="11.4dp"
+        android:layout_marginLeft="1.4dp"
+
         android:fontFamily="@font/proximanova"
+        android:background="#CBEBFC"
 
 
-        android:background="@drawable/outgoing"
         android:lineSpacingExtra="2dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="4dp"
+
         android:elevation="6dp"
-        android:paddingRight="15dp"
+        android:paddingRight="5dp"
 
 
-        android:paddingBottom="10dp"
+        android:paddingBottom="2dp"
         android:textColor="@android:color/black"
         android:textSize="12dp"
 
         android:text=""
         />
+
+</LinearLayout>
+
     <ImageView
         android:id="@+id/sendMessegeImage"
         android:layout_width="300dp"

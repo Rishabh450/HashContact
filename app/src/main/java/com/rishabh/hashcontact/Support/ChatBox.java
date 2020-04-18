@@ -431,7 +431,7 @@ shareloc=findViewById(R.id.shareloc);
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String x=dataSnapshot.getValue(String.class);
-                if(x.equals("1"))
+                if(x!=null &&x.equals("1"))
                     OneSignal.clearOneSignalNotifications();
             }
 
@@ -1309,6 +1309,7 @@ String rand= String.valueOf(rand_int1);
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String lastmsgRec= (String) dataSnapshot.getValue();
+
                 final long lastmsgtimeRec= Long.parseLong(lastmsgRec);
                 myref.child("Communication").child(currentUser).child("Messege").child(user2).child("lastMessege").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -1824,10 +1825,11 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
                                     databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("status").setValue("Sent"+"\n"+currentDateAndTime);
                                     databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(false);
+
                                     databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull final DataSnapshot dataSnapshot2) {
-                                            if(dataSnapshot2.child("delivered").getValue(Boolean.class)==false)
+                                            if(dataSnapshot2.hasChild("delivered")&& dataSnapshot2.child("delivered").getValue(Boolean.class)==false)
                                             {
                                                 Log.d("delvaa","falsemila");
 
@@ -1846,9 +1848,9 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                                         my.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshotd) {
-                                                                if(dataSnapshotd.getValue(Boolean.class)==false)
+                                                                if(dataSnapshotd.getValue(Boolean.class)!=null&&dataSnapshotd.getValue(Boolean.class)==false)
                                                                 {
-                                                                    if (currentDateAndTime.substring(0, currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0, serverdate.lastIndexOf(':'))) && Math.abs(currentDateAndTime.substring(currentDateAndTime.lastIndexOf(':') + 1).compareTo(serverdate.substring(0, serverdate.lastIndexOf(':') + 1))) < 2) {
+                                                                    if (currentDateAndTime.substring(0, currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0, serverdate.lastIndexOf(':'))) && Math.abs(currentDateAndTime.substring(currentDateAndTime.lastIndexOf(':') + 1).compareTo(serverdate.substring(0, serverdate.lastIndexOf(':') + 1))) < 3) {
                                                                         databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(true);
                                                                         databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("deliveredAt").setValue(currentDateAndTime2);
                                                                         databaseReference.removeEventListener(this);
@@ -2039,8 +2041,10 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
 
                             String namer =dataSnapshot1.getValue(String.class);
+                            if(namer==null)
+                                namer="";
 
-                            Log.d("stringwa",namer);
+                            //Log.d("stringwa",namer);
                             if(namer.equals("true"))
                             {
 
@@ -2569,7 +2573,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                         databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull final DataSnapshot dataSnapshot2) {
-                                                if(dataSnapshot2.child("delivered").getValue(Boolean.class)==false)
+                                                if(dataSnapshot2.hasChild("delivered")&&dataSnapshot2.child("delivered").getValue(Boolean.class)==false)
                                                 {
                                                     Log.d("delvaa","falsemila");
 
@@ -2588,7 +2592,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                                             my.addListenerForSingleValueEvent(new ValueEventListener() {
                                                                 @Override
                                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshotd) {
-                                                                    if(dataSnapshotd.getValue(Boolean.class)==false)
+                                                                    if(dataSnapshotd.getValue(Boolean.class)!=null&&dataSnapshotd.getValue(Boolean.class)==false)
                                                                     {
                                                                         if (currentDateAndTime.substring(0, currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0, serverdate.lastIndexOf(':'))) && Math.abs(currentDateAndTime.substring(currentDateAndTime.lastIndexOf(':') + 1).compareTo(serverdate.substring(0, serverdate.lastIndexOf(':') + 1))) < 3) {
                                                                             databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(true);

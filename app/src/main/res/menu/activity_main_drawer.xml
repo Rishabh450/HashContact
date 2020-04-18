@@ -17,6 +17,10 @@
             android:icon="@drawable/qr_code"
             android:title="Show QR" />
         <item
+            android:id="@+id/change"
+            android:icon="@drawable/profile"
+            android:title="Edit Avatar" />
+        <item
             android:id="@+id/signout"
             android:icon="@drawable/sign"
             android:title="Sign Out" />

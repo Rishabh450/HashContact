@@ -21,6 +21,7 @@ import com.rishabh.hashcontact.Support.Chats;
 import com.rishabh.hashcontact.Support.Feed;
 import com.rishabh.hashcontact.Support.LiveLocationService;
 import com.rishabh.hashcontact.Support.Login;
+import com.rishabh.hashcontact.Support.ProfilePhoto;
 import com.rishabh.hashcontact.Support.QRcode;
 import com.rishabh.hashcontact.ui.gallery.GalleryFragment;
 import com.rishabh.hashcontact.ui.home.HomeFragment;
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.e("ak47","user null");
                     Intent intent = new Intent(MainActivity.this, Login.class);
                     startActivity(intent);
+                    finish();
                 }
                 else
                 {
@@ -264,8 +266,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.addDrawerListener(actionBarDrawerToggle);
             actionBarDrawerToggle.syncState();
             FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-            HomeFragment booksAvailable=new HomeFragment();
-            fragmentTransaction.add(R.id.fragment_container,booksAvailable);
+            root.setBackgroundResource(R.mipmap.background);
+            //do somthing
+            GalleryFragment booksAvailable=new GalleryFragment();
+            fragmentTransaction.replace(R.id.fragment_container,booksAvailable);
             fragmentTransaction.commit();
             bott.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -348,8 +352,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         if(drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        else
-        super.onBackPressed();
+        else{
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory( Intent.CATEGORY_HOME );
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+        }
     }
 
     @Override
@@ -409,6 +417,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fragmentTransaction1.replace(R.id.fragment_container,books);
                     fragmentTransaction1.commit();
                     break;
+            case R.id.change:Intent intent=new Intent(this, ProfilePhoto.class);
+            startActivity(intent);
+            break;
+
             case R.id.nav_qr:
                 FragmentManager fragmentManager2=getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction2=fragmentManager2.beginTransaction();
