@@ -361,7 +361,7 @@ Button fromid;
         database = FirebaseDatabase.getInstance();
         final int[] f1 = {0};
         databaseReference = database.getReference();
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())

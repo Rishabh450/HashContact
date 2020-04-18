@@ -2639,43 +2639,6 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
                                     }
                                 });
-                                databaseReference.child(currentUser).child("Messege").child(user2).child("chat").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if(dataSnapshot.hasChild(String.valueOf(ts))&&dataSnapshot.child(String.valueOf(ts)).hasChild("delivered")&&!dataSnapshot.child(String.valueOf(ts)).child("delivered").getValue(Boolean.class))
-                                        {
-                                            databaseReference.child(user2).child("isConnected").addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    String currentDateAndTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-                                                    String serverdate=dataSnapshot.getValue(String.class);
-                                                    if(currentDateAndTime.substring(0,currentDateAndTime.lastIndexOf(':')).compareTo(serverdate)!=0)
-                                                        databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(false);
-                                                    else
-                                                        databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(true);
-
-
-
-
-
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                }
-                                            });
-
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-
 
 
                                 databaseReference.child(currentUser).child("Messege").child(user2).child("lastMessege").setValue(String.valueOf(ts));

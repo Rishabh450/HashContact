@@ -103,7 +103,7 @@ public class RecyclerViewChatList extends RecyclerView.Adapter<RecyclerViewChatL
             }
         });
         final String[] uri = new String[1];
-        databaseReference.child(contacts.get(i).get("key")).child("Personal").child("Photo").addValueEventListener(new ValueEventListener() {
+        databaseReference.child(contacts.get(i).get("key")).child("Personal").child("Photo").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
