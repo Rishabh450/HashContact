@@ -1,6 +1,7 @@
 package com.rishabh.hashcontact;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +19,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.rishabh.hashcontact.Models.Post;
 import com.rishabh.hashcontact.Support.Chats;
 import com.rishabh.hashcontact.Support.Feed;
+import com.rishabh.hashcontact.Support.LiveLocationService;
 import com.rishabh.hashcontact.Support.Login;
 import com.rishabh.hashcontact.Support.QRcode;
 import com.rishabh.hashcontact.ui.gallery.GalleryFragment;
@@ -168,10 +171,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 else{
                     userno=user.getUid();
                 }
+            LiveLocationService mYourService = new LiveLocationService();
+          // Intent userService = new Intent(MainActivity.this, userLocationService.getClass());
+           Intent mServiceIntent = new Intent(MainActivity.this, mYourService.getClass());
+
+            if (!isMyServiceRunning(mYourService.getClass())) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    startForegroundService(mServiceIntent);
 
 
+                } else {
 
+                    startService(mServiceIntent);
 
+                }
+            }
             Toolbar toolbar = findViewById(R.id.toolbar);
 
             setSupportActionBar(toolbar);
@@ -414,6 +429,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+        private boolean isMyServiceRunning(Class<?> serviceClass) {
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    Log.i("Service status", "Running");
+                    return true;
+                }
+            }
+            Log.i("Service status", "Not running");
+            return false;
+        }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

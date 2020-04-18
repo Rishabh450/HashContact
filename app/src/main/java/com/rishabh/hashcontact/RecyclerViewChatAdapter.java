@@ -116,10 +116,15 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final ChatViewHolder chatViewHolder, final int i) {
-        if(messeges!=null) {
-            String stat=getEmojiByUnicode(0x2714);
-            if(messeges.get(i).status==null)
-                stat=getEmojiByUnicode(0x23F0);
+        if(messeges!=null&&messeges.size()!=0) {
+            String stat=getEmojiByUnicode(0x23F0);
+            if(messeges.get(i).status!=null) {
+                if(messeges.get(i).delivered==false)
+                stat = getEmojiByUnicode(0x2714);
+                else
+                    stat=getEmojiByUnicode(0x2714)+getEmojiByUnicode(0x2714);
+
+            }
             SpannableString ssemoji = new SpannableString(stat);
             ssemoji.setSpan(new RelativeSizeSpan(0.2f), 0, stat.length() -1, 0);
             ssemoji.setSpan(new ForegroundColorSpan(Color.GRAY), 0, ssemoji.length() - 1, 0);// set color
