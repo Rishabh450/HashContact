@@ -1446,13 +1446,18 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                     Log.e("ak471",dataSnapshot1.getValue()+" "+dataSnapshot1.getKey()+" ");
                     if(!dataSnapshot1.getKey().equals("isTyping")&&!dataSnapshot1.getKey().equals("chattingAt")&&!dataSnapshot1.getKey().equals("lastMessege")&&!dataSnapshot1.getKey().equals("seen")&&!dataSnapshot1.getKey().equals("lastMessegee")&&!dataSnapshot1.getKey().equals("Notification")&&!dataSnapshot1.getKey().equals("Block"))
                     {
+                        String delAt;
                         boolean bol=false;
                         if(dataSnapshot1.hasChild("delivered"))
                             bol=dataSnapshot1.child("delivered").getValue(Boolean.class);
                         else
                             bol=false;
+                        if(bol)
+                            delAt=dataSnapshot1.child("deliveredAt").getValue(String.class);
+                        else
+                            delAt="";
 
-                    Messege m=new Messege((String) dataSnapshot1.child("msg").getValue(),Long.parseLong(dataSnapshot1.getKey()) , true,dataSnapshot1.child("status").getValue(String.class),bol);
+                    Messege m=new Messege((String) dataSnapshot1.child("msg").getValue(),Long.parseLong(dataSnapshot1.getKey()) , true,dataSnapshot1.child("status").getValue(String.class),bol,delAt);
 
                     sent.add(m);
                     }
@@ -1494,8 +1499,13 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                             bol=dataSnapshot1.child("delivered").getValue(Boolean.class);
                         else
                             bol=false;
+                        String delAt;
+                        if(bol)
+                            delAt=dataSnapshot1.child("deliveredAt").getValue(String.class);
+                        else
+                            delAt="";
 
-                        Messege m=new Messege((String) dataSnapshot1.child("msg").getValue(),Long.valueOf(dataSnapshot1.getKey()),false,dataSnapshot1.child("status").getValue(String.class),bol);
+                        Messege m=new Messege((String) dataSnapshot1.child("msg").getValue(),Long.valueOf(dataSnapshot1.getKey()),false,dataSnapshot1.child("status").getValue(String.class),bol,delAt);
                     recive.add(m);
                     recyclerView.scrollToPosition(0);}
                 }
@@ -1812,7 +1822,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                     String currentDateAndTime = new SimpleDateFormat("hh:mm a dd-MM").format(new Date());
                                     Log.d("delvaa","success");
 
-                                    databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("status").setValue("sent"+" at "+currentDateAndTime);
+                                    databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("status").setValue("Sent"+"\n"+currentDateAndTime);
                                     databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(false);
                                     databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).addValueEventListener(new ValueEventListener() {
                                         @Override
@@ -1838,7 +1848,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshotd) {
                                                                 if(dataSnapshotd.getValue(Boolean.class)==false)
                                                                 {
-                                                                    if (currentDateAndTime.substring(0, currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0, serverdate.lastIndexOf(':'))) && Math.abs(currentDateAndTime.substring(currentDateAndTime.lastIndexOf(':') + 1).compareTo(serverdate.substring(0, serverdate.lastIndexOf(':') + 1))) < 10) {
+                                                                    if (currentDateAndTime.substring(0, currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0, serverdate.lastIndexOf(':'))) && Math.abs(currentDateAndTime.substring(currentDateAndTime.lastIndexOf(':') + 1).compareTo(serverdate.substring(0, serverdate.lastIndexOf(':') + 1))) < 2) {
                                                                         databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(true);
                                                                         databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("deliveredAt").setValue(currentDateAndTime2);
                                                                         databaseReference.removeEventListener(this);
@@ -2551,7 +2561,77 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                 databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("msg").setValue(uri.toString()+" "+filename).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("status").setValue("sent");
+                                        String currentDateAndTime = new SimpleDateFormat("hh:mm a dd-MM").format(new Date());
+                                        Log.d("delvaa","success");
+
+                                        databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("status").setValue("Sent"+"\n"+currentDateAndTime);
+                                        databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(false);
+                                        databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull final DataSnapshot dataSnapshot2) {
+                                                if(dataSnapshot2.child("delivered").getValue(Boolean.class)==false)
+                                                {
+                                                    Log.d("delvaa","falsemila");
+
+                                                    final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference();
+                                                    databaseReference1.child(user2).child("isConnected").addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            Log.d("connecy","nhdjs");
+                                                            Log.d("delvaa","connect falsemila");
+                                                            final String currentDateAndTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+                                                            final String currentDateAndTime2 = new SimpleDateFormat("hh:mm a dd-MM").format(new Date());
+
+                                                            final String serverdate=dataSnapshot.getValue(String.class);
+                                                            Log.d("deliveredtest",currentDateAndTime.substring(0,currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0,serverdate.lastIndexOf(':')))+" " );
+                                                            DatabaseReference my=FirebaseDatabase.getInstance().getReference().child("Communication").child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered");
+                                                            my.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshotd) {
+                                                                    if(dataSnapshotd.getValue(Boolean.class)==false)
+                                                                    {
+                                                                        if (currentDateAndTime.substring(0, currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0, serverdate.lastIndexOf(':'))) && Math.abs(currentDateAndTime.substring(currentDateAndTime.lastIndexOf(':') + 1).compareTo(serverdate.substring(0, serverdate.lastIndexOf(':') + 1))) < 3) {
+                                                                            databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered").setValue(true);
+                                                                            databaseReference.child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("deliveredAt").setValue(currentDateAndTime2);
+                                                                            databaseReference.removeEventListener(this);
+                                                                            databaseReference1.removeEventListener(this);
+                                                                            Log.d("delvaa","connect truekar");
+
+
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                }
+                                                            });
+                                                            if(dataSnapshot2.child("delivered").getValue(Boolean.class)==false) {
+
+
+                                                            }
+
+
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
 
                                     }
                                 });

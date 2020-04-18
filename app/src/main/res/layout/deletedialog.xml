@@ -9,16 +9,44 @@
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/seenat"
+        android:textStyle="italic"
         android:layout_height="wrap_content"
         android:text=""
-        android:textAppearance="@style/OpenSansTextStyle"
+        android:textSize="17dp"
+        android:textColor="@android:color/white"
+        android:fontFamily="@font/fright"
         android:layout_marginRight="24dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="5dp"
+        android:background="#d3d3d3"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/delat"
+        android:textStyle="italic"
+        android:textColor="@android:color/white"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="17dp"
+        android:fontFamily="@font/fright"
+        android:layout_marginRight="24dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="5dp"
+        android:background="#d3d3d3"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Delete For Everyone"
-        android:textAppearance="@style/OpenSansTextStyle"
+        android:fontFamily="@font/montserrat"
+        android:layout_marginTop="20dp"
+        android:textSize="18dp"
+
         android:layout_marginRight="24dp"/>
 
 
@@ -28,7 +56,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="20dp"
         android:gravity="end"
         android:layout_marginBottom="10dp">
 

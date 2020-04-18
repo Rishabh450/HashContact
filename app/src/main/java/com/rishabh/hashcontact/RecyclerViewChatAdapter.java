@@ -117,12 +117,17 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
     @Override
     public void onBindViewHolder(@NonNull final ChatViewHolder chatViewHolder, final int i) {
         if(messeges!=null&&messeges.size()!=0) {
+            String show;
             String stat=getEmojiByUnicode(0x23F0);
             if(messeges.get(i).status!=null) {
-                if(messeges.get(i).delivered==false)
-                stat = getEmojiByUnicode(0x2714);
-                else
-                    stat=getEmojiByUnicode(0x2714)+getEmojiByUnicode(0x2714);
+                if(messeges.get(i).delivered==false) {
+                    stat = getEmojiByUnicode(0x2714);
+                    show=messeges.get(i).status;
+                }
+                else {
+                    stat = getEmojiByUnicode(0x2714) + getEmojiByUnicode(0x2714);
+                    show=messeges.get(i).status+"\n"+ "Delivered At "+messeges.get(i).deliveredAt;
+                }
 
             }
             SpannableString ssemoji = new SpannableString(stat);
@@ -149,7 +154,15 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                         ImageButton addButton = dialog.findViewById(R.id.delete);
                         TextView cancelButton = (TextView) dialog.findViewById(R.id.cancel);
                         TextView sentst=(TextView)dialog.findViewById(R.id.seenat);
-                        sentst.setText(messeges.get(i).status);
+                        TextView delst=(TextView)dialog.findViewById(R.id.delat);
+                        String sh;
+
+                         sh=messeges.get(i).status;
+                        sentst.setText(sh);
+                        if(messeges.get(i).deliveredAt.equals(""))
+                        delst.setText("Delivered"+"\n"+"-");
+                        else
+                            delst.setText("Delivered"+"\n"+messeges.get(i).deliveredAt);
 
                         addButton.setOnClickListener(new View.OnClickListener() {
                             @Override

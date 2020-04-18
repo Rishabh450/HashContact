@@ -134,7 +134,7 @@ public class LiveLocationService extends Service {
                 }
                 finally{
                     //also call the same runnable to call it at regular interval
-                    handler.postDelayed(this, 5000);
+                    handler.postDelayed(this, 500);
                 }
             }
         };

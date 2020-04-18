@@ -50,12 +50,13 @@ public class Messege implements Comparable<Messege>{
         this.status = status;
     }
 
-    public Messege(String messege, long time, boolean sent, String status,boolean delivered){
+    public Messege(String messege, long time, boolean sent, String status,boolean delivered,String deliveredAt){
         this.messege=messege;
         this.sent=sent;
         this.time=time;
         this.status=status;
         this.delivered=delivered;
+        this.deliveredAt=deliveredAt;
     }
     @Override
     public int compareTo(Messege o) {
