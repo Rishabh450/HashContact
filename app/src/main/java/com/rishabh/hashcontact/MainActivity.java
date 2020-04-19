@@ -2,6 +2,7 @@ package com.rishabh.hashcontact;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.rishabh.hashcontact.Models.Post;
 import com.rishabh.hashcontact.Support.Chats;
@@ -33,13 +35,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.StrictMode;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -65,8 +71,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.view.Menu;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -83,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     AppBarLayout root;
 
 
+    private static final int ACCESSIBILITY_ENABLED = 1;
 
 
     @Override
@@ -173,9 +182,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 else{
                     userno=user.getUid();
                 }
+                Log.d("taskremoved",isAccessibilitySettingsOn(MainActivity.this)+" ");
+            if(!isAccessibilitySettingsOn(this))
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final View view = LayoutInflater.from(context).inflate(R.layout.askpermission, null);
+                builder.setView(view);
+                final Dialog dialog = builder.create();
+
+                dialog.setContentView(R.layout.askpermission);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.MyAnimation_Window;
+                dialog.getWindow().setBackgroundDrawableResource(R.color.trans);
+                // (0x80000000, PorterDuff.Mode.MULTIPLY);
+                dialog.show();
+
+                TextView addButton = dialog.findViewById(R.id.delete);
+                TextView cancelButton = (TextView) dialog.findViewById(R.id.cancel);
+
+                addButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                        dialog.dismiss();
+
+
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+
+
+            }
             LiveLocationService mYourService = new LiveLocationService();
           // Intent userService = new Intent(MainActivity.this, userLocationService.getClass());
            Intent mServiceIntent = new Intent(MainActivity.this, mYourService.getClass());
+
+
 
             if (!isMyServiceRunning(mYourService.getClass())) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -452,6 +499,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.i("Service status", "Not running");
             return false;
         }
+
+    public static boolean isAccessibilitySettingsOn(Context context) {
+        int accessibilityEnabled = 0;
+        final String service = "com.rishabh.hashcontact" + "/" + LiveLocationService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    context.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e("AU", "Error finding setting, default accessibility to not found: "
+                    + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == ACCESSIBILITY_ENABLED) {
+            String settingValue = Settings.Secure.getString(
+                    context.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

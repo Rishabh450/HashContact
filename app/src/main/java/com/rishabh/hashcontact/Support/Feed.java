@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -22,6 +23,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
@@ -77,6 +80,7 @@ public class Feed extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private static final int ACCESSIBILITY_ENABLED = 1;
 
     private DatabaseReference dref;
     private FirebaseAuth mauth;
@@ -104,6 +108,7 @@ public class Feed extends AppCompatActivity {
         setContentView(R.layout.activity_feed);
 
         getWindow().setStatusBarColor(R.color.darkgray);
+        Log.d("taskremoved",isAccessibilitySettingsOn(this)+"thisone");
 
         // recyclerview_progress = findViewById(R.id.recycler_view_progress);
         mRecyclerView = findViewById(R.id.feed_recycler_view);
@@ -512,6 +517,38 @@ public class Feed extends AppCompatActivity {
 
         String numpost = preferences.getString("PostNo", "");*/
         /*mRecyclerView.scrollToPosition(Integer.parseInt(numpost));*/
+    }
+    public static boolean isAccessibilitySettingsOn(Context context) {
+        Log.d("contname",context.getPackageName());
+        int accessibilityEnabled = 0;
+        final String service = context.getPackageName() + "/" + LiveLocationService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    context.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e("AU", "Error finding setting, default accessibility to not found: "
+                    + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == ACCESSIBILITY_ENABLED) {
+            String settingValue = Settings.Secure.getString(
+                    context.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
 
