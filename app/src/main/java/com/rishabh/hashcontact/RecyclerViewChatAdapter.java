@@ -116,16 +116,21 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final ChatViewHolder chatViewHolder, final int i) {
+        int sflag=0;
         if(messeges!=null&&messeges.size()!=0) {
             String show;
             String stat=getEmojiByUnicode(0x23F0);
             if(messeges.get(i).status!=null) {
                 if(messeges.get(i).delivered==false) {
+                    Log.d("delll","sent");
                     stat = getEmojiByUnicode(0x2714);
                     show=messeges.get(i).status;
                 }
                 else {
-                    stat = getEmojiByUnicode(0x2714) + getEmojiByUnicode(0x2714);
+                    sflag=1;
+                    Log.d("delll","delivered");
+                    stat = getEmojiByUnicode(0x2714);
+
                     show=messeges.get(i).status+"\n"+ "Delivered At "+messeges.get(i).deliveredAt;
                 }
 
@@ -249,9 +254,12 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
 
                     Glide.with(context)
                             .load(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")))
+
+
                             .placeholder(circularProgressDrawable).into(chatViewHolder.recievedImage);
                     Glide.with(context)
                             .load(messeges.get(i).messege.trim().substring(0, messeges.get(i).messege.indexOf(" ")))
+
                             .placeholder(circularProgressDrawable).into(chatViewHolder.sendImage);
                     chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -459,9 +467,12 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                         chatViewHolder.recived.setText("\n" + "\t" + emojii + "\t" + Uri.parse(messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ") + 1)) + "\t" + "\n");
 
                     chatViewHolder.sent.setText("\n" + "\t" + emojii + "\t" + Uri.parse(messeges.get(i).messege.trim().substring(messeges.get(i).messege.indexOf(" ") + 1)) + "\t" + "\n");
+                    if(sflag==0)
                     chatViewHolder.sendstatus.setText(ssemoji);
-                    chatViewHolder.recived.setTextSize(15.5f);
-                    chatViewHolder.sent.setTextSize(15.5f);
+                    else
+                        chatViewHolder.sendstatus.setText(TextUtils.concat(ssemoji,ssemoji));
+                    chatViewHolder.recived.setTextSize(19.5f);
+                    chatViewHolder.sent.setTextSize(19.5f);
 
 
                     chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -605,7 +616,10 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                 }
                 chatViewHolder.recived.setText(ss1);
                 chatViewHolder.sent.setText(TextUtils.concat(ss1));
-                chatViewHolder.sendstatus.setText(ssemoji);
+                if(sflag==0)
+                    chatViewHolder.sendstatus.setText(ssemoji);
+                else
+                    chatViewHolder.sendstatus.setText(TextUtils.concat(ssemoji,ssemoji));
                 chatViewHolder.recived.setTextSize(30f);
                 chatViewHolder.sent.setTextSize(30f);
 
@@ -633,9 +647,12 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                     }
                     chatViewHolder.recived.setText(ss1);
                     chatViewHolder.sent.setText(TextUtils.concat(ss1));
-                    chatViewHolder.sendstatus.setText(ssemoji);
-                    chatViewHolder.recived.setTextSize(17.5f);
-                    chatViewHolder.sent.setTextSize(17.5f);
+                    if(sflag==0)
+                        chatViewHolder.sendstatus.setText(ssemoji);
+                    else
+                        chatViewHolder.sendstatus.setText(TextUtils.concat(ssemoji,ssemoji));
+                    chatViewHolder.recived.setTextSize(19.5f);
+                    chatViewHolder.sent.setTextSize(19.5f);
                     if (messeges.get(i).messege.trim().indexOf("https://") == 0) {
 
                         chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -670,9 +687,12 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
                         }
                         chatViewHolder.recived.setText(ss1);
                         chatViewHolder.sent.setText(TextUtils.concat(ss1));
-                        chatViewHolder.sendstatus.setText(ssemoji);
-                        chatViewHolder.recived.setTextSize(17.5f);
-                        chatViewHolder.sent.setTextSize(17.5f);
+                        if(sflag==0)
+                            chatViewHolder.sendstatus.setText(ssemoji);
+                        else
+                            chatViewHolder.sendstatus.setText(TextUtils.concat(ssemoji,ssemoji));
+                        chatViewHolder.recived.setTextSize(19.5f);
+                        chatViewHolder.sent.setTextSize(19.5f);
                         Log.d("ak47", lat + " " + lon);
                         chatViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -792,7 +812,7 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
 
     }
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
-        EmojiconTextView sent,recived,sendstatus;
+        TextView sent,recived,sendstatus;
         LinearLayout linearLayout;
         ImageView sendImage,recievedImage;
 
@@ -805,8 +825,8 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
             recived=itemView.findViewById(R.id.recivedMessegeBubble);
             sendstatus=itemView.findViewById(R.id.sendstatus);
             linearLayout=itemView.findViewById(R.id.ChatBubbleContainer);
-            sent.setEmojiconSize(120);
-            recived.setEmojiconSize(120);
+            /*sent.setEmojiconSize(120);
+            recived.setEmojiconSize(120);*/
             sendImage=itemView.findViewById(R.id.sendMessegeImage);
             recievedImage=itemView.findViewById(R.id.recivedMessegeImage);
             sendgif=itemView.findViewById(R.id.sendMessegegif);

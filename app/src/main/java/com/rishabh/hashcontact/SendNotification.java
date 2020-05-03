@@ -20,6 +20,7 @@ public class SendNotification {
             OneSignal.enableVibrate(true);
             OneSignal.enableSound(true);
 
+
             OneSignal.postNotification(notificationContent, null);
 
         } catch (JSONException e) {

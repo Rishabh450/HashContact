@@ -7,7 +7,7 @@
     android:id="@+id/ChatBubbleContainer"
     android:layout_height="wrap_content">
 
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+    <TextView
         android:id="@+id/recivedMessegeBubble"
         android:layout_width="wrap_content"
         android:layout_marginTop="10dp"
@@ -27,19 +27,21 @@ android:background="@drawable/icoming"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
         android:text="RECived Messege"
-        android:textSize="16.5dp" />
+        android:textSize="19.5dp" />
 
     <ImageView
 
         android:id="@+id/recivedMessegeImage"
-        android:layout_width="300dp"
+        android:layout_width="280dp"
         android:visibility="gone"
-        android:layout_marginTop="10dp"
         android:elevation="3dp"
+        android:background="#80000000"
+        android:padding="6dp"
+        android:layout_margin="10dp"
+        android:scaleType="matrix"
 
-        android:layout_marginLeft="10dp"
         android:layout_gravity="left"
-        android:layout_height="300dp">
+        android:layout_height="280dp">
 
     </ImageView>
     <pl.droidsonroids.gif.GifImageView
@@ -62,7 +64,7 @@ android:background="@drawable/icoming"
     android:layout_gravity="right"
     android:gravity="left"
     android:layout_height="wrap_content">
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+    <TextView
         android:id="@+id/sendMessegeBubble"
         android:layout_width="wrap_content"
         android:layout_marginTop="10dp"
@@ -80,12 +82,12 @@ android:background="@drawable/icoming"
 
         android:paddingBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="16.5dp"
+        android:textSize="19.5dp"
 
         android:text="Send Messege"
         />
 
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+    <TextView
         android:id="@+id/sendstatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -116,14 +118,20 @@ android:background="@drawable/icoming"
 
     <ImageView
         android:id="@+id/sendMessegeImage"
-        android:layout_width="300dp"
-        android:visibility="gone"
+        android:layout_width="280dp"
         android:elevation="3dp"
+        android:visibility="gone"
+        android:layout_margin="10dp"
 
-        android:layout_marginRight="10dp"
+        android:scaleType="matrix"
+        android:background="#80000000"
+        android:padding="6dp"
+
+
+
 
         android:layout_gravity="right"
-        android:layout_height="300dp">
+        android:layout_height="280dp">
 
     </ImageView>
     <pl.droidsonroids.gif.GifImageView

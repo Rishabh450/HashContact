@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/logohash"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.rishabh.hashcontact.Models.Post"></activity>
+        <activity android:name="com.rishabh.hashcontact.Models.Post"
+            ></activity>
         <activity android:name="com.rishabh.hashcontact.Support.UploadStatus" />
         <receiver android:name="com.rishabh.hashcontact.ConnectivityBroadcastReceiver">
             <intent-filter>
@@ -37,7 +38,8 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <activity android:name="com.rishabh.hashcontact.MapsActivity" />
-        <activity android:name="com.rishabh.hashcontact.Support.ChatBox" />
+        <activity android:name="com.rishabh.hashcontact.Support.ChatBox"
+            />
         <activity
             android:name="com.rishabh.hashcontact.Support.Details"
             android:parentActivityName="com.rishabh.hashcontact.MainActivity" />

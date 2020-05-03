@@ -74,7 +74,7 @@ Button contact;
             public void onClick(View v) {
               DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child(key).child("Contact");
               ref.keepSynced(true);
-              ref.addValueEventListener(new ValueEventListener() {
+              ref.addListenerForSingleValueEvent(new ValueEventListener() {
                   @Override
                   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                       if(dataSnapshot.hasChild(currentUser))

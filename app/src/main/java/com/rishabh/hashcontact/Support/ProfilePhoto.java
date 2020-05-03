@@ -10,8 +10,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +33,10 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.onesignal.OneSignal;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.IOException;
 
 public class ProfilePhoto extends AppCompatActivity {
     EditText avatar;
@@ -40,6 +46,7 @@ public class ProfilePhoto extends AppCompatActivity {
     int flagger;
     public   String av;
    public String url;
+   boolean imageSelected=false;
 
 
     @Override
@@ -123,45 +130,83 @@ public class ProfilePhoto extends AppCompatActivity {
         def.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(avatar.getText().toString().equals(""))
-                    Toast.makeText(ProfilePhoto.this,"Enter Avatar name",Toast.LENGTH_SHORT).show();
-                else
-                {
-                        av=avatar.getText().toString();
+                final ProgressDialog mProgress = new ProgressDialog(ProfilePhoto.this);
+                mProgress.setTitle("Uploading");
+
+
+                mProgress.setCancelable(false);
+
+                mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgress.show();
+
                        FirebaseDatabase database = FirebaseDatabase.getInstance();
                        DatabaseReference databaseReference=database.getReference();
 
-                        flagger=1;
-                        databaseReference.child(id).child("Personal").child("Name").setValue(avatar.getText().toString());
+
                         databaseReference.child(id).child("Personal").child("Photo").setValue(url).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(ProfilePhoto.this,"Press Proceed to continue",Toast.LENGTH_LONG).show();
+                                mProgress.dismiss();
+                                imageSelected=true;
+                                Toast.makeText(ProfilePhoto.this,"Image Uploaded",Toast.LENGTH_SHORT).show();
                             }
                         });
 
 
 
 
-                }
+
 
             }
         });
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(flagger==1) {
-                    final Intent intent = new Intent(ProfilePhoto.this, MainActivity.class);
-                    intent.putExtra("avatar", av);
-                    intent.putExtra("url", url);
+                if(avatar.getText().toString().equals("")) {
 
 
-                    startActivity(intent);
-                    finish();
+                    Toast.makeText(ProfilePhoto.this,"Enter Avatar",Toast.LENGTH_LONG).show();
+
+
+                }
+                else if(avatar.getText().toString().trim().contains(" "))
+                {
+                    Toast.makeText(ProfilePhoto.this,"Avatar can't contain spaces",Toast.LENGTH_LONG).show();
+
+                }
+                else if(imageSelected==false)
+                {
+                    Toast.makeText(ProfilePhoto.this,"Add Profile Picture",Toast.LENGTH_LONG).show();
+
                 }
                 else
-                {
-                    Toast.makeText(ProfilePhoto.this,"Enter the details",Toast.LENGTH_LONG).show();
+                {  final ProgressDialog mProgress = new ProgressDialog(ProfilePhoto.this);
+                    mProgress.setTitle("Uploading");
+
+
+                    mProgress.setCancelable(false);
+
+                    mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    mProgress.show();
+
+                    FirebaseDatabase.getInstance().getReference().child(id).child("Personal").child("Name").setValue(avatar.getText().toString().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String ava=avatar.getText().toString().trim();
+                        final Intent intent = new Intent(ProfilePhoto.this, MainActivity.class);
+                        intent.putExtra("avatar", ava);
+                        intent.putExtra("url", url);
+                        FirebaseDatabase.getInstance().getReference().child(id).child("isReg").setValue("yes").addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                mProgress.dismiss();
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                    }
+                });
+
                 }
 
 
@@ -217,9 +262,7 @@ public class ProfilePhoto extends AppCompatActivity {
     }
     public void upload()
     {
-        if(avatar.getText().toString().equals(""))
-            Toast.makeText(ProfilePhoto.this,"Enter Avatar name",Toast.LENGTH_SHORT).show();
-        else
+
         openGallery();
 
     }
@@ -232,101 +275,118 @@ public class ProfilePhoto extends AppCompatActivity {
         return url;
     }
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        try {
-            startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    1);
-        } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(this, "Please install a File Manager.",
-                    Toast.LENGTH_SHORT).show();
-        }
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1,1)
+                .start(ProfilePhoto.this);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == RESULT_OK&&(requestCode==1)) {
-
-            final long ts = (long) System.currentTimeMillis();
-            String selectedImage = data.getData().toString();
-            final FirebaseDatabase[] database1 = {FirebaseDatabase.getInstance()};
-            final DatabaseReference databaseReference1 = database1[0].getReference();
-            final String mediaId = String.valueOf(ts);
-            final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("ProfilePictures/").child(String.valueOf(ts));
-            final UploadTask uploadTask;
-            uploadTask = filePath.putFile(Uri.parse(selectedImage));
-            Log.d("sender", selectedImage);
-            final ProgressDialog mProgress = new ProgressDialog(ProfilePhoto.this);
-            mProgress.setTitle("Uploading");
-
-
-            mProgress.setCancelable(true);
-
-            mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgress.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    uploadTask.cancel();
-                }
-            });
-
-            //  mProgress.setInverseBackgroundForced(setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY));
-            mProgress.show();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            Bitmap bitmap;
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                final long ts = (long) System.currentTimeMillis();
+                String selectedImage =resultUri.toString();
+                final FirebaseDatabase[] database1 = {FirebaseDatabase.getInstance()};
+                final DatabaseReference databaseReference1 = database1[0].getReference();
+                final String mediaId = String.valueOf(ts);
+                final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("ProfilePictures/").child(String.valueOf(ts));
+                final UploadTask uploadTask;
+                uploadTask = filePath.putFile(Uri.parse(selectedImage));
+                Log.d("sender", selectedImage);
+                final ProgressDialog mProgress = new ProgressDialog(ProfilePhoto.this);
+                mProgress.setTitle("Uploading");
 
 
+                mProgress.setCancelable(false);
 
+                mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                mProgress.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        uploadTask.cancel();
+                    }
+                });
 
+                //  mProgress.setInverseBackgroundForced(setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY));
+                mProgress.show();
 
 
 
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            if(avatar.getText().toString().equals(""))
-                                Toast.makeText(ProfilePhoto.this,"Enter Avatar name",Toast.LENGTH_SHORT).show();
-                            else
-                            {
-                                flagger =1;
-                                av=avatar.getText().toString();
-
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference databaseReference=database.getReference();
 
 
-                                databaseReference.child(id).child("Personal").child("Name").setValue(avatar.getText().toString());
-                                databaseReference.child(id).child("Personal").child("Photo").setValue(uri.toString());
-                                DatabaseReference reference =FirebaseDatabase.getInstance().getReference().child(id).child("Personal").child("Photo");
+
+
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(final Uri uri) {
+                                if(avatar.getText().toString().equals(""))
+                                    Toast.makeText(ProfilePhoto.this,"Enter Avatar name",Toast.LENGTH_SHORT).show();
+                                else
+                                {
+                                    flagger =1;
+                                    av=avatar.getText().toString();
+
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference databaseReference=database.getReference();
+
+
+                                    //databaseReference.child(id).child("Personal").child("Name").setValue(avatar.getText().toString());
+                                    databaseReference.child(id).child("Personal").child("Photo").setValue(uri.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mProgress.dismiss();
+                                            imageSelected=true;
+                                            url=uri.toString();
+                                            Toast.makeText(ProfilePhoto.this,"Image Uploaded",Toast.LENGTH_SHORT).show();
+
+
+                                        }
+                                    });
+                                    DatabaseReference reference =FirebaseDatabase.getInstance().getReference().child(id).child("Personal").child("Photo");
+
+
+                                }
+
+
+
 
 
                             }
+                        });
 
 
-                            mProgress.dismiss();
-                            Toast.makeText(ProfilePhoto.this,"Press proceed to continue",Toast.LENGTH_LONG).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress =(100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                        mProgress.setMessage("Uploaded: "+(int)progress+"%");
+                        mProgress.setProgress((int) progress);
+
+                    }
+                });
 
 
-                        }
-                    });
 
 
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress =(100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
-                    mProgress.setMessage("Uploaded: "+(int)progress+"%");
-                    mProgress.setProgress((int) progress);
 
-                }
-            });
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+
+        if(resultCode == RESULT_OK&&(requestCode==1)) {
+
+
         }
     }
 

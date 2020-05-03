@@ -96,9 +96,7 @@ public class LiveLocationService extends AccessibilityService {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(LiveLocationService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder notificationBuilder = new Notification.Builder(LiveLocationService.this)
-                .setContentTitle("Service")
-                .setContentText("Connected To Server")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+
                 .setContentIntent(contentIntent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             notificationBuilder.setChannelId("app_channel");

@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         setContentView(R.layout.activity_main);
+        getWindow().setStatusBarColor(R.color.darkgray);
 
        // SHA1: FD:BA:5A:0A:0C:9F:66:3A:8C:D0:87:AF:26:D2:77:E9:9B:6C:E1:F5
 // GOOGLE PLAY APP SIGNING SHA-1 KEY:- 65:5D:66:A1:C9:31:85:AB:92:C6:A2:60:87:5B:1A:DA:45:6E:97:EA

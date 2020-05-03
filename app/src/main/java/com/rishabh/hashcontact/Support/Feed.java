@@ -31,6 +31,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -76,6 +77,7 @@ public class Feed extends AppCompatActivity {
     private Runnable runnable;
     private Handler handler;
     private boolean firstScroll = true;
+    TextView nopost;
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
@@ -114,6 +116,7 @@ public class Feed extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.feed_recycler_view);
         status = findViewById(R.id.statusRecycler);
         statusmypic = findViewById(R.id.statusmypic);
+        nopost=findViewById(R.id.nopost);
 
         refreshLayout=findViewById(R.id.swipe_refresh);
         for (UserInfo user : FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
@@ -267,133 +270,7 @@ public class Feed extends AppCompatActivity {
     private void fetchFeedsDataFromFirebase() {
 
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
-       /* dref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull final DataSnapshot ds, @Nullable String s) {
 
-                    final String post_id_temp = ds.getKey();
-                    String is = "";
-                    if (true) {
-                        final String sender_id = ds.child("senderID").getValue().toString();
-                        readData(new MyCallback() {
-                            @Override
-                            public void onCallback(boolean value) {
-                                if (value) {
-                                    boolean flag = false;
-
-                                    ArrayList<Likes> mlikes = new ArrayList<>();
-                                    for (DataSnapshot dslike : ds.child("likes").getChildren()) {
-
-                                        String temp = dslike.getValue().toString();
-                                        Likes like = new Likes(temp);
-                                        mlikes.add(like);
-                                        if (temp.equals(currentUser)) {
-                                            flag = true;
-                                        }
-                                    }
-
-                                    ArrayList<Comments> mcomments = new ArrayList<>();
-
-                                    String content = ds.child("content").getValue().toString();
-                                    String event_name = ds.child("event").getValue().toString();
-                                    String subevent_name = ds.child("subEvent").getValue().toString();
-                                    String image_url = ds.child("imageURL").getValue().toString();
-                                    String sender_url = ds.child("senderURL").getValue(String.class);
-
-                                    FeedPost post = new FeedPost(flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments, sender_url, sender_id);
-
-                                    Log.e("vila", post.getImageURL());
-                                    listposts.add(post);
-                                    if (flag == true)
-                                        setUpfirstRecyclerView();
-                                    else
-                                        setUpRecyclerView();
-                                    Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
-                                    mFeedAdapter.notifyItemInserted(0);
-                                }
-
-                            }
-
-                        },sender_id);
-
-                    }
-
-
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull final DataSnapshot ds, @Nullable final String s) {
-
-                final String post_id_temp = ds.getKey();
-                String is = "";
-                if (true) {
-                    final String sender_id = ds.child("senderID").getValue().toString();
-                    readData(new MyCallback() {
-                        @Override
-                        public void onCallback(boolean value) {
-                            if (value) {
-                                boolean flag = false;
-
-                                ArrayList<Likes> mlikes = new ArrayList<>();
-                                for (DataSnapshot dslike : ds.child("likes").getChildren()) {
-
-                                    String temp = dslike.getValue().toString();
-                                    Likes like = new Likes(temp);
-                                    mlikes.add(like);
-                                    if (temp.equals(currentUser)) {
-                                        flag = true;
-                                    }
-                                }
-
-                                ArrayList<Comments> mcomments = new ArrayList<>();
-
-                                String content = ds.child("content").getValue().toString();
-                                String event_name = ds.child("event").getValue().toString();
-                                String subevent_name = ds.child("subEvent").getValue().toString();
-                                String image_url = ds.child("imageURL").getValue().toString();
-                                String sender_url = ds.child("senderURL").getValue(String.class);
-
-                                FeedPost post = new FeedPost(flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments, sender_url, sender_id);
-
-                                Log.e("vila", post.getImageURL());
-                                listposts.remove(mFeedAdapter.apos);
-                                listposts.add(mFeedAdapter.apos,post);
-                                if (flag == true)
-                                    setUpfirstRecyclerView();
-                                else
-                                    setUpRecyclerView();
-                                Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
-                                Log.d("prevposs", String.valueOf(mFeedAdapter.apos));
-                                mFeedAdapter.notifyDataSetChanged();
-                               // mFeedAdapter.notifyItemInserted(mFeedAdapter.getItemCount()-1- mFeedAdapter.apos);
-                            }
-
-                        }
-
-                    },sender_id);
-
-                }
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                mFeedAdapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-*/
         dref.keepSynced(true);
         dref.addListenerForSingleValueEvent(valueEventListener = new ValueEventListener() {
 
@@ -441,7 +318,16 @@ public class Feed extends AppCompatActivity {
                                     else
                                         setUpRecyclerView();
                                     Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
+                                    if(listposts.size()==0) {
+                                        nopost.setVisibility(View.VISIBLE);
+                                       // Log.e("VIVZ", "onDataChange: listposts count =visible " + listposts.size());
 
+                                    }
+                                    else {
+                                        nopost.setVisibility(View.GONE);
+                                       // Log.e("VIVZ", "onDataChange: listposts count =gone " + listposts.size());
+
+                                    }
                                 }
 
                             }
@@ -451,6 +337,7 @@ public class Feed extends AppCompatActivity {
                     }
 
                 }
+
             }
 
             @Override

@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Hashcontact"
+        android:text="HashContact"
         android:fontFamily="@font/montserrat"
         android:textStyle="bold"
         android:textColor="#ffffff"

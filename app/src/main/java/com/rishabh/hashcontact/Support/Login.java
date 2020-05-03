@@ -23,6 +23,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.facebook.Profile;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.rishabh.hashcontact.MainActivity;
 import com.rishabh.hashcontact.R;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -55,6 +63,7 @@ public class Login extends AppCompatActivity {
     CardView facebook_sign_in;
     FirebaseAuth.AuthStateListener mAuthstateListner;
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -65,11 +74,76 @@ public class Login extends AppCompatActivity {
         }
     }
     private void sendToMainActicity() {
-        mProgress.dismiss();
-        constraintLayout=findViewById(R.id.login);
-        constraintLayout.setVisibility(View.GONE);
+        String provider = null,userno = null;
+        for (UserInfo use:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if (use.getProviderId().equals("facebook.com")) {
+                provider="facebook";
+                userno= Profile.getCurrentProfile().getId();
+                FirebaseDatabase.getInstance().getReference().child(userno).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild("isReg"))
+                        {
+                            mProgress.dismiss();
+                            constraintLayout=findViewById(R.id.login);
+                            constraintLayout.setVisibility(View.GONE);
 
-        startActivity(new Intent(Login.this, ProfilePhoto.class));
+                            startActivity(new Intent(Login.this, MainActivity.class));
+                        }
+                        else
+                        {
+                            mProgress.dismiss();
+                            constraintLayout=findViewById(R.id.login);
+                            constraintLayout.setVisibility(View.GONE);
+
+                            startActivity(new Intent(Login.this, ProfilePhoto.class));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+            else {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                provider = "google";
+                userno=user.getUid();
+                FirebaseDatabase.getInstance().getReference().child(userno).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild("isReg"))
+                        {
+                            mProgress.dismiss();
+                            constraintLayout=findViewById(R.id.login);
+                            constraintLayout.setVisibility(View.GONE);
+
+                            startActivity(new Intent(Login.this, MainActivity.class));
+                        }
+                        else
+                        {
+                            mProgress.dismiss();
+                            constraintLayout=findViewById(R.id.login);
+                            constraintLayout.setVisibility(View.GONE);
+
+                            startActivity(new Intent(Login.this, ProfilePhoto.class));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+
+        }
+
 
 
 

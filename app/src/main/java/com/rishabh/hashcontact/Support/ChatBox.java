@@ -32,6 +32,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -56,6 +57,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -139,7 +141,7 @@ RecyclerView.LayoutManager mMediaLayoutManager;
     String msgseen="false";int f=0;
 Drawable img;int flag=0;
 
-LinearLayout composer,blockmsg,tool;
+LinearLayout composer,blockmsg;
 TextView changeback,mute,block,defaul,custom;
 ImageView dp;int sentflag=0;
     String currentUser,user2;
@@ -152,7 +154,8 @@ ImageView dp;int sentflag=0;
     Animation fabopen,fabclose,fabclock,fabanticlock;
     EmojiconEditText messegeComposer;
     private GoogleMap mMap;
-    private ProgressBar recyclerview_progress;
+    private ProgressBar recyclerview_progress,upload_progress;
+
     ImageView send;FloatingActionButton loc;
     FloatingActionButton location;FloatingActionButton voice;
     String filename;
@@ -168,7 +171,7 @@ ImageView dp;int sentflag=0;
     Button cross;
     String providerr;
 
-    @SuppressLint("WrongThread")
+    @SuppressLint({"WrongThread", "ResourceAsColor"})
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -179,6 +182,7 @@ ImageView dp;int sentflag=0;
 
 
         setContentView(R.layout.activity_chat_box);
+        getWindow().setStatusBarColor(R.color.darkgray);
         /* final String APP_ID = "1688";
          final String AUTH_KEY = "C3DBrqhVjVEdqkH";
          final String AUTH_SECRET = "ywTXBNSn36N3kAH";
@@ -198,6 +202,10 @@ ImageView dp;int sentflag=0;
 
         b=findViewById(R.id.emoji);
         mapfrag=findViewById(R.id.mapfrag);
+        upload_progress=findViewById(R.id.uploadprog);
+        upload_progress.setScaleY(1.5f);
+
+        upload_progress.setVisibility(View.GONE);
 
         recyclerView=findViewById(R.id.chatbox);
         for (UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
@@ -226,8 +234,8 @@ ImageView dp;int sentflag=0;
         fabanticlock=AnimationUtils.loadAnimation(this,R.anim.rotate_anticlockwise);
         rootView = findViewById(R.id.rootview);
         calluser = findViewById(R.id.call);
-        tool=findViewById(R.id.tool);
-        tool.getBackground().setAlpha(99);
+       /* tool=findViewById(R.id.tool);
+        tool.getBackground().setAlpha(99);*/
         frag=findViewById(R.id.frag);
         clip=findViewById(R.id.clip);
 
@@ -325,6 +333,7 @@ shareloc=findViewById(R.id.shareloc);
         /*if(composer!=null)
             composer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);*/
         blockmsg=findViewById(R.id.blockmsg);
+
         OneSignal.pauseInAppMessages(true);
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference isOnlineRef = rootRef.child(currentUser).child("isOnline");
@@ -1172,15 +1181,17 @@ dp.setOnClickListener(new View.OnClickListener() {
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 20, locationListener);
              lastKnown=getLastKnownLocation();
-            recyclerview_progress.setVisibility(View.GONE);
-            shareloc.setVisibility(View.VISIBLE);
+             if(lastKnown!=null) {
+                 recyclerview_progress.setVisibility(View.GONE);
+                 shareloc.setVisibility(View.VISIBLE);
 
-            mMap.setBuildingsEnabled(true);
-            mMap.clear();
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            LatLng sydney = new LatLng(lastKnown.getLatitude(), lastKnown.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Your current location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,17));
+                 mMap.setBuildingsEnabled(true);
+                 mMap.clear();
+                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                 LatLng sydney = new LatLng(lastKnown.getLatitude(), lastKnown.getLongitude());
+                 mMap.addMarker(new MarkerOptions().position(sydney).title("Your current location"));
+                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 17));
+             }
 
         }
 
@@ -1683,7 +1694,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                 emojIcon.ShowEmojIcon();
                 emojIcon.setUseSystemEmoji(true);
 
-                emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
+               /* emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
                     @Override
                     public void onKeyboardOpen() {
                         Log.e("Keyboard","open");
@@ -1696,7 +1707,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                        // recyclerView.smoothScrollToPosition(0);
                     }
                 });
-
+*/
             }
         });
 
@@ -1750,7 +1761,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
             }
         });*/
-        messegeComposer.setOnKeyListener(new View.OnKeyListener() {
+     /*   messegeComposer.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                // recyclerView.smoothScrollToPosition(0);
@@ -1758,7 +1769,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
 
             }
-        });
+        });*/
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -1768,6 +1779,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                     //recyclerView.smoothScrollToPosition(0);
                     Log.e("MyActivityyy", "keyboard opened");
                 } else {
+
                     Log.e("MyActivityyy", "keyboard closed");
                 }
             }
@@ -1843,7 +1855,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                                                         final String currentDateAndTime2 = new SimpleDateFormat("hh:mm a dd-MM").format(new Date());
 
                                                         final String serverdate=dataSnapshot.getValue(String.class);
-                                                        Log.d("deliveredtest",currentDateAndTime.substring(0,currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0,serverdate.lastIndexOf(':')))+" " );
+                                                      //  Log.d("deliveredtest",currentDateAndTime.substring(0,currentDateAndTime.lastIndexOf(':')).equals(serverdate.substring(0,serverdate.lastIndexOf(':')))+" " );
                                                         DatabaseReference my=FirebaseDatabase.getInstance().getReference().child("Communication").child(currentUser).child("Messege").child(user2).child("chat").child(String.valueOf(ts)).child("delivered");
                                                         my.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
@@ -2532,24 +2544,7 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                         Log.d("kam kiya", "false");
                         uploadTask = filePath.putFile(Uri.parse(mediaUri));
                     }
-
-                final ProgressDialog  mProgress = new ProgressDialog(ChatBox.this);
-                mProgress.setTitle("Sending...");
-
-
-                mProgress.setCancelable(true);
-                mProgress.setIcon(R.drawable.connectlogo);
-                mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                mProgress.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        uploadTask.cancel();
-                    }
-                });
-
-                //  mProgress.setInverseBackgroundForced(setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY));
-                mProgress.getWindow().getAttributes().windowAnimations=R.style.MyAnimation_Window;
-                mProgress.show();
+                upload_progress.setVisibility(View.VISIBLE);
 
 
 
@@ -2646,7 +2641,8 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
                                 totalMediaUploaded++;
 
-                                    mProgress.dismiss();
+                                    upload_progress.setVisibility(View.GONE);
+                                  //  upload_progress.setProgress(0);
                                     if(floc==1)
                                     {
                                         messegeComposer.setText("LOCATION:-"+lastKnown.getLatitude()+"||"+lastKnown.getLongitude());
@@ -2738,8 +2734,8 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
                         double progress =(100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
-                        mProgress.setMessage("Uploaded: "+(int)progress+"%");
-                        mProgress.setProgress((int) progress);
+
+                       // upload_progress.setProgress((int) progress);
 
                     }
                 });
@@ -2754,7 +2750,6 @@ rootView.setBackground(getDrawable(R.mipmap.chatba));
 
         }
     }
-
 
 
 
