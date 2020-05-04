@@ -91,7 +91,7 @@ public class RecyclerViewChatList extends RecyclerView.Adapter<RecyclerViewChatL
 
                 String namer =dataSnapshot.getValue(String.class);
                 chatListViewHolder.title.setText(namer);
-                Log.d("stringwa",namer);
+               // Log.d("stringwa",namer);
 
 
 
