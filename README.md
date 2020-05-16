@@ -1,4 +1,5 @@
 # HashContact
+# https://play.google.com/store/apps/details?id=com.rishabh.hashcontact
 What if you share every piece of information related to you just by the scan of QR code.
 
 Features:-
